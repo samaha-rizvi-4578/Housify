@@ -63,7 +63,7 @@ if(isset($_POST['btn_login']))
                 $_SESSION['resident_name'] = $resident['name'];
                  if($resident['role'] == 'resident' || $resident['role'] == 'owner')
                  {
-                     header('Location: bills.php');
+                     header('Location: maintenance.php');
                  }
                  else
                  {
