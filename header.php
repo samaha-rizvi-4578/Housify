@@ -80,22 +80,31 @@ $notification = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         {
                         ?>
                         <a class="nav-link" href="resident.php">
-                            User
+                            Residents
                         </a>
                         <a class="nav-link" href="house.php">
-                            Flats
+                            Houses
                         </a>
                         <a class="nav-link" href="allotment.php">
                             Allotment
                         </a>
                         <a class="nav-link" href="maintenance.php">
-                            Bills
+                            Maintenance Bills
                         </a>
                         <a class="nav-link" href="complaint.php">
                             Complaints
                         </a>
                         <a class="nav-link" href="visitor.php">
                             Visitors
+                        </a>
+                        <a class="nav-link" href="facility.php">
+                            Facilities
+                        </a>
+                        <a class="nav-link" href="service.php">
+                            Services
+                        </a>
+                        <a class="nav-link" href="Payment.php">
+                            Payments
                         </a>
                         <a class="nav-link" href="report.php">
                             Reports
