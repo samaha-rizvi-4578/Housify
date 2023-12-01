@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `house` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `house_number` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `street_name` int(11) NOT NULL,
+  `street_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `block_number` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)

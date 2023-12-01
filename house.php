@@ -2,18 +2,18 @@
 
 require_once 'config.php';
 
-if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin' || $$_SESSION['resident_role'] !== 'resident' || $$_SESSION['resident_role'] !== 'owner')) 
+if (!isset($_SESSION['resident_id']) || $_SESSION['resident_role'] !== 'admin') 
 {
   	header('Location: logout.php');
   	exit();
 }
 
-if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete' && $_SESSION['resident_role'] == 'admin')
+if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete')
 {
-	$stmt = $pdo->prepare("DELETE FROM maintenance WHERE id = ?");
+	$stmt = $pdo->prepare("DELETE FROM house WHERE id = ?");
   	$stmt->execute([$_GET['id']]);
-  	$_SESSION['success'] = 'Maintenance Bills Data has been removed';
-  	header('location:maintenance.php');
+  	$_SESSION['success'] = 'House Data has been removed';
+  	header('location:house.php');
 }
 
 include('header.php');
@@ -21,10 +21,10 @@ include('header.php');
 ?>
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Maintenance Bills Management</h1>
+    <h1 class="mt-4">House Management</h1>
     <ol class="breadcrumb mb-4">
     	<li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item active">Maintenance Bill Management</li>
+        <li class="breadcrumb-item active">House Management</li>
     </ol>
     <?php
 
@@ -40,31 +40,23 @@ include('header.php');
 		<div class="card-header">
 			<div class="row">
 				<div class="col col-6">
-					<h5 class="card-title">Maintenance Bills Management</h5>
+					<h5 class="card-title">House Management</h5>
 				</div>
 				<div class="col col-6">
-					<?php
-					if($_SESSION['resident_role'] == 'admin')
-					{
-					?>
-					<div class="float-end"><a href="add_maintenance.php" class="btn btn-success btn-sm">Add</a></div>
-					<?php
-					}
-					?>
+					<div class="float-end"><a href="add_house.php" class="btn btn-success btn-sm">Add</a></div>
 				</div>
 			</div>
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered table-striped table-bordered" id="maintenance-table">
+				<table class="table table-bordered table-striped table-bordered" id="house-table">
 					<thead>
 						<tr>
-							<th>ID</th>
+							<td>ID</td>
 							<th>House Number</th>
-							<th>Bill Amount</th>
-							<th>Month</th>
-							<th>Paid Amount</th>
-							<th>Updated At</th>
+							<th>Street Name</th>
+							<th>Block Number</th>
+							<th>Created At</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -91,20 +83,33 @@ include('footer.php');
 <script>
 
 $(document).ready(function() {
-    $('#maintenance-table').DataTable({
+    $('#house-table').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
         	url: 'action.php',
         	method:"POST",
-        	data: {action : 'fetch_maintenance'}
-        }
+        	data: {action : 'fetch_house'}
+        },
+        "columns": [
+            { "data": "id" },
+            { "data": "house_number" },
+            { "data": "street_name" },
+            { "data" : "block_number"},
+            { "data": "created_at"},
+            {
+        		"data": null,
+        		"render": function(data, type, row) {
+          			return '<a href="edit_house.php?id='+row.id+'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'+row.id+'">Delete</button>';
+        		}
+        	}
+        ]
     });
 
     $(document).on('click', '.delete_btn', function(){
-    	if(confirm("Are you sure you want to remove this Maintenance Bill data?"))
+    	if(confirm("Are you sure you want to remove this house data?"))
     	{
-    		window.location.href = 'maintenance.php?action=delete&id=' + $(this).data('id') + '';
+    		window.location.href = 'house.php?action=delete&id=' + $(this).data('id') + '';
     	}
     });
 });
