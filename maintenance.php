@@ -2,7 +2,7 @@
 
 require_once 'config.php';
 
-if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin' || $$_SESSION['resident_role'] !== 'resident' || $$_SESSION['resident_role'] !== 'owner')) 
+if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin')) 
 {
   	header('Location: logout.php');
   	exit();

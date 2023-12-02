@@ -61,7 +61,7 @@ include('header.php');
     <h1 class="mt-4">Edit House</h1>
     <ol class="breadcrumb mb-4">
     	<li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="flats.php">House Management</a></li>
+        <li class="breadcrumb-item"><a href="house.php">House Management</a></li>
         <li class="breadcrumb-item active">Edit House Management</li>
     </ol>
 	<div class="col-md-4">
@@ -84,7 +84,7 @@ include('header.php');
 				<form id="add-house-form" method="POST">
 				  	<div class="mb-3">
 				    	<label for="house-number" class="form-label">House Number</label>
-				    	<input type="text" class="form-control" id="flat-number" name="house_number" value="<?php echo (isset($house['house_number'])) ? $house['house_number'] : ''; ?>">
+				    	<input type="text" class="form-control" id="house-number" name="house_number" value="<?php echo (isset($house['house_number'])) ? $house['house_number'] : ''; ?>">
 				  	</div>
 				  	<div class="mb-3">
 				    	<label for="street-name" class="form-label">Street Name</label>

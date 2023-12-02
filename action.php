@@ -135,19 +135,20 @@ if(isset($_POST['action']))
 		echo json_encode($response);
 	}
 
-	if($_POST['action'] == 'fetch_users')
+	if($_POST['action'] == 'fetch_resident')
 	{
 		// Define the columns that should be returned in the response
 		$columns = array(
 		    'id',
 		    'name',
-		    'email',
+		    'ssn',
+            'house_id',
 		    'role',
 		    'created_at'
 		);
 
 		// Define the table name and the primary key column
-		$table = 'users';
+		$table = 'resident';
 		$primaryKey = 'id';
 
 		// Define the base query
@@ -162,7 +163,7 @@ if(isset($_POST['action']))
 		{
 		    $search = $_POST['search']['value'];
 
-		    $filterQuery = " WHERE (name LIKE '%$search%' OR email LIKE '%$search%' OR role LIKE '%$search%')";
+		    $filterQuery = " WHERE (name LIKE '%$search%' OR ssn LIKE '%$search%' OR house_id LIKE '%$search%' OR role LIKE '%$search%')";
 		}
 
 		// Add the filter query to the base query
@@ -197,31 +198,32 @@ if(isset($_POST['action']))
 		echo json_encode($response);
 	}
 
-	if($_POST['action'] == 'fetch_bills')
+	if($_POST['action'] == 'fetch_maintenance')
 	{
 		// Define the columns that should be returned in the response
 		$columns = array(
-		    'bills.id', 
-		    'bills.bill_title',
-		    'flats.flat_number', 
-		    'bills.amount', 
-		    'bills.month', 
-		    'bills.paid_amount', 
-		    'bills.created_at'
+		    'maintenance.id', 
+		    'house.house_number', 
+		    'maintenance.amount', 
+		    'maintenance.month', 
+		    'maintenance.paid_date',
+		    'maintenance.paid_amount',
+		    'maintenance.paid_amount',
+		    'maintenance.created_at'
 		);
 
 		// Define the table name and the primary key column
-		$table = 'bills';
+		$table = 'maintenance';
 		$primaryKey = 'id';
 
 		// Define the base query
 		$query = "
-		SELECT bills.id, bills.bill_title, flats.flat_number, flats.block_number, bills.amount, bills.month, bills.paid_amount, bills.created_at FROM $table
-		JOIN flats ON flats.id = bills.flat_id 
+		SELECT 'maintenance.id', 'house.house_number', 'maintenance.amount', 'maintenance.month', 'maintenance.paid_date', 'maintenance.paid_amount','maintenance.paid_amount','maintenance.created_at' FROM $table
+		JOIN house ON house.id = maintenace.house_id 
 		";
 
 		// Get the total number of records
-		if($_SESSION['user_role'] == 'user')
+		if($_SESSION['resident_role'] == 'owner' || $_SESSION['resident_role'] == 'resident' )
 		{
 			$stmt = $pdo->prepare('SELECT flat_id FROM allotments WHERE user_id = ?');
 			$stmt->execute([$_SESSION['user_id']]);
