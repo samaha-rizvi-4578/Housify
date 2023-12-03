@@ -10,10 +10,10 @@ if (!isset($_SESSION['resident_id']) || ($_SESSION['resident_role'] !== 'admin' 
 
 if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete')
 {
-	$stmt = $pdo->prepare("DELETE FROM facility WHERE id = ?");
+	$stmt = $pdo->prepare("DELETE FROM service WHERE id = ?");
   	$stmt->execute([$_GET['id']]);
-  	$_SESSION['success'] = 'Facility Data has been removed';
-  	header('location:facility.php');
+  	$_SESSION['success'] = 'Service Data has been removed';
+  	header('location:service.php');
 }
 
 include('header.php');
@@ -21,10 +21,10 @@ include('header.php');
 ?>
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Facility Management</h1>
+    <h1 class="mt-4">Service Management</h1>
     <ol class="breadcrumb mb-4">
     	<li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item active">Facility Management</li>
+        <li class="breadcrumb-item active">Service Management</li>
     </ol>
     <?php
 
@@ -40,14 +40,14 @@ include('header.php');
 		<div class="card-header">
 			<div class="row">
 				<div class="col col-6">
-					<h5 class="card-title">Facility Management</h5>
+					<h5 class="card-title">Service Management</h5>
 				</div>
 				<div class="col col-6">
 					<?php
 					if($_SESSION['resident_role'] == 'admin')
 					{
 					?>
-					<div class="float-end"><a href="add_facility.php" class="btn btn-success btn-sm">Add</a></div>
+					<div class="float-end"><a href="add_service.php" class="btn btn-success btn-sm">Add</a></div>
 					<?php
 					}
 					?>
@@ -55,7 +55,7 @@ include('header.php');
 					if($_SESSION['resident_role'] == 'user')
 					{
 					?>
-					<div class="float-end"><a href="book_facility.php" class="btn btn-success btn-sm">Book</a></div>
+					<div class="float-end"><a href="book_service.php" class="btn btn-success btn-sm">Book</a></div>
 					<?php
 					}
 					?>
@@ -64,11 +64,11 @@ include('header.php');
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered table-striped table-bordered" id="facility-table">
+				<table class="table table-bordered table-striped table-bordered" id="service-table">
 					<thead>
 						<tr>
 							<td>ID</td>
-							<th>Facility Name</th>
+							<th>Service Name</th>
 							<th>Amount</th>
 							<th>Status</th>
 							<th>Created At</th>
@@ -104,14 +104,14 @@ $(document).ready(function() {
         "ajax": {
         	url: 'action.php',
         	method:"POST",
-        	data: {action : 'fetch_facility'}
+        	data: {action : 'fetch_service'}
         }
     });
 
     $(document).on('click', '.delete_btn', function(){
-    	if(confirm("Are you sure you want to remove this Facility data?"))
+    	if(confirm("Are you sure you want to remove this Service data?"))
     	{
-    		window.location.href = 'facility.php?action=delete&id=' + $(this).data('id') + '';
+    		window.location.href = 'service.php?action=delete&id=' + $(this).data('id') + '';
     	}
     });
 });

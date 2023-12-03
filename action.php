@@ -703,7 +703,98 @@ if (isset($_POST['action'])) {
 
             if ($_SESSION['resident_role'] == 'admin') {
                 
-                    $edit_btn = '<a href="edit_visitor.php?id=' . $row["id"] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
+                    $edit_btn = '<a href="edit_service.php?id=' . $row["id"] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
+                    $delete_btn = '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="' . $row['id'] . '">Delete</button>&nbsp;';
+            }
+
+            $sub_array[] = $view_btn . $edit_btn . $delete_btn;
+
+            $data[] = $sub_array;
+        }
+
+        // Build the response
+        $response = array(
+            "draw" => intval($_REQUEST['draw']),
+            "recordsTotal" => intval($count),
+            "recordsFiltered" => intval($countFiltered),
+            "data" => $data
+        );
+
+        // Convert the response to JSON and output it
+        echo json_encode($response);
+    }
+    if ($_POST['action'] == 'fetch_service') {
+        $columns = array(
+            'id',
+            'name',
+            'amount',
+            'booked_status',
+            'created_at'
+        );
+
+        // Define the table name and the primary key column
+        $table = 'service';
+        $primaryKey = 'id';
+
+        // Define the base query
+        $query = "
+		SELECT id, name, amount, booked_status, created_at FROM $table
+		";
+
+        // Get the total number of records
+    
+            $count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
+
+        // Define the filter query
+        $filterQuery = '';
+
+        if (!empty($_POST['search']['value'])) {
+            $search = $_POST['search']['value'];
+
+            $filterQuery = " WHERE (id LIKE '%$search%' OR name LIKE '%$search%' OR amount LIKE '%$search%' OR booked_status LIKE '%$search%')";
+        }
+
+
+        // Add the filter query to the base query
+        $query .= $filterQuery;
+
+        // Get the number of filtered records
+        $countFiltered = $pdo->query($query)->rowCount();
+
+        // Add sorting to the query
+        $orderColumn = $columns[$_POST['order'][0]['column']];
+        $orderDirection = $_POST['order'][0]['dir'];
+        $query .= " ORDER BY $orderColumn $orderDirection";
+
+        // Add pagination to the query
+        $start = $_POST['start'];
+        $length = $_POST['length'];
+        $query .= " LIMIT $start, $length";
+
+        // Execute the query and fetch the results
+        $stmt = $pdo->query($query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $data = array();
+
+        foreach ($results as $row) {
+            $sub_array = array();
+            $sub_array[] = $row['id'];
+            $sub_array[] = $row['name'];
+            $sub_array[] = $row['amount'];
+            if ($row['booked_status'] == 'booked') {
+                $sub_array[] = '<span class="badge bg-danger">Booked</span>';
+            } else {
+                $sub_array[] = '<span class="badge bg-success">Available</span>';
+            }
+            $sub_array[] = $row['created_at'];
+            $view_btn = '<a href="view_service.php?id=' . $row["id"] . '" class="btn btn-warning btn-sm">View</a>&nbsp;';
+            $edit_btn = '';
+            $delete_btn = '';
+
+            if ($_SESSION['resident_role'] == 'admin') {
+                
+                    $edit_btn = '<a href="edit_service.php?id=' . $row["id"] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
                     $delete_btn = '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="' . $row['id'] . '">Delete</button>&nbsp;';
             }
 
