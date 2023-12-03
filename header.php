@@ -85,8 +85,8 @@ $notification = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <a class="nav-link" href="house.php">
                             Houses
                         </a>
-                        <a class="nav-link" href="allotment.php">
-                            Allotment
+                        <a class="nav-link" href="available.php">
+                            Available Houses
                         </a>
                         <a class="nav-link" href="maintenance.php">
                             Maintenance Bills

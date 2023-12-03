@@ -569,4 +569,67 @@ if (isset($_POST['action'])) {
         // Convert the response to JSON and output it
         echo json_encode($response);
     }
+    if($_POST['action'] == 'fetch_available')
+	{
+		// Define the columns that should be returned in the response
+		$columns = array(
+		    'house.id',
+		    'house.house_number',
+		    'house.street_name',
+		    'house.block_number',
+		    'house.created_at'
+		);
+
+		// Define the table name and the primary key column
+		$table = 'house';
+		$primaryKey = 'id';
+
+		// Define the base query
+		$query = "
+		SELECT " . implode(", ", $columns) . " FROM $table
+        Where id not in (SELECT house_id FROM resident)
+		";
+
+		// Get the total number of records
+        $count = $pdo->query("SELECT COUNT(*) FROM $table Where id NOT IN (SELECT house_id FROM resident)")->fetchColumn();
+
+        // Define the filter query
+        $filterQuery = '';
+        if (!empty($_POST['search']['value'])) {
+            $search = $_POST['search']['value'];
+
+            $filterQuery = " WHERE (house_number LIKE '%$search%' OR street_name LIKE '%$search%' OR block_number LIKE '%$search%')";
+        }
+
+        // Add the filter query to the base query
+        $query .= $filterQuery;
+
+        // Get the number of filtered records
+        $countFiltered = $pdo->query($query)->rowCount();
+
+        // Add sorting to the query
+        $orderColumn = $columns[$_POST['order'][0]['column']];
+        $orderDirection = $_POST['order'][0]['dir'];
+        $query .= " ORDER BY $orderColumn $orderDirection";
+
+        // Add pagination to the query
+        $start = $_POST['start'];
+        $length = $_POST['length'];
+        $query .= " LIMIT $start, $length";
+
+        // Execute the query and fetch the results
+        $stmt = $pdo->query($query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Build the response
+        $response = array(
+            "draw" => intval($_REQUEST['draw']),
+            "recordsTotal" => intval($count),
+            "recordsFiltered" => intval($countFiltered),
+            "data" => $results
+        );
+
+        // Convert the response to JSON and output it
+        echo json_encode($response);
+	}
 }
