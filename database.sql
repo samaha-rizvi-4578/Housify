@@ -61,6 +61,7 @@ CREATE TABLE `visitor` (
   `house_id` int(11) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ssn` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `in_datetime` datetime DEFAULT NULL,
   `out_datetime` datetime DEFAULT NULL,
   `is_in_out` enum('in','out') COLLATE utf8_unicode_ci NOT NULL,
@@ -170,7 +171,7 @@ ALTER TABLE `resident`
   ADD CONSTRAINT `resident_fk` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `bills`
+-- Constraints for table `visitor`
 --
 ALTER TABLE `visitor`
   ADD CONSTRAINT `visitor_fk` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE CASCADE;
