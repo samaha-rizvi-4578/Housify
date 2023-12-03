@@ -98,7 +98,7 @@ include('footer.php');
 <script>
 
 $(document).ready(function() {
-    $('#facility-table').DataTable({
+    $('#service-table').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {

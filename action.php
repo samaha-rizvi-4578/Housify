@@ -703,7 +703,7 @@ if (isset($_POST['action'])) {
 
             if ($_SESSION['resident_role'] == 'admin') {
                 
-                    $edit_btn = '<a href="edit_service.php?id=' . $row["id"] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
+                    $edit_btn = '<a href="edit_facility.php?id=' . $row["id"] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
                     $delete_btn = '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="' . $row['id'] . '">Delete</button>&nbsp;';
             }
 
