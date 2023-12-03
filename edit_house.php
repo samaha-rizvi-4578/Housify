@@ -31,13 +31,15 @@ if(isset($_POST['edit_house']))
 
   	// If the form data is valid, update the user's password
   	if (empty($errors)) 
-  	{
+  	{ 
+        $id = $_GET['id'];
   		$sql = "UPDATE house SET house_number = ?, street_name = ?, block_number = ? WHERE id = ?";
+        echo $sql;
 
   		$pdo->prepare($sql)->execute([$house_number, $street_name, $block_number, $id]);
-
+          echo $sql;
   		$_SESSION['success'] = 'House Data Edit';
-
+            echo $_SESSION['success'];
   		header('location:house.php');
   		exit();
   	}
@@ -79,6 +81,7 @@ include('header.php');
 		<div class="card">
 			<div class="card-header">
 				<h5 class="card-title">Edit House Data</h5>
+                <?php $house['id']?>
 			</div>
 			<div class="card-body">
 				<form id="add-house-form" method="POST">

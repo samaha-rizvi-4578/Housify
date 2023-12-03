@@ -66,75 +66,6 @@ if(isset($_POST['action']))
 		echo json_encode($response);
 	}
 
-	if($_POST['action'] == 'fetch_allotments')
-	{
-		// Define the columns that should be returned in the response
-		$columns = array(
-		    'allotments.id',
-		    'users.name',
-		    'flats.flat_number',
-		    'flats.block_number',
-		    'flats.flat_type',
-		    'allotments.move_in_date',
-		    'allotments.move_out_date',
-		    'allotments.created_at'
-		);
-
-		// Define the table name and the primary key column
-		$table = 'allotments';
-		$primaryKey = 'id';
-
-		// Define the base query
-		$query = "
-		SELECT " . implode(", ", $columns) . " FROM $table
-        INNER JOIN flats ON allotments.flat_id = flats.id
-        INNER JOIN users ON allotments.user_id = users.id
-		";
-
-		// Get the total number of records
-		$count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
-
-		// Define the filter query
-		$filterQuery = '';
-		if (!empty($_POST['search']['value'])) 
-		{
-		    $search = $_POST['search']['value'];
-
-		    $filterQuery = " WHERE (flats.flat_number LIKE '%$search%' OR users.name LIKE '%$search%')";
-		}
-
-		// Add the filter query to the base query
-		$query .= $filterQuery;
-
-		// Get the number of filtered records
-		$countFiltered = $pdo->query($query)->rowCount();
-
-		// Add sorting to the query
-		$orderColumn = $columns[$_POST['order'][0]['column']];
-		$orderDirection = $_POST['order'][0]['dir'];
-		$query .= " ORDER BY $orderColumn $orderDirection";
-
-		// Add pagination to the query
-		$start = $_POST['start'];
-		$length = $_POST['length'];
-		$query .= " LIMIT $start, $length";
-
-		// Execute the query and fetch the results
-		$stmt = $pdo->query($query);
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		// Build the response
-		$response = array(
-		    "draw" => intval($_REQUEST['draw']),
-		    "recordsTotal" => intval($count),
-		    "recordsFiltered" => intval($countFiltered),
-		    "data" => $results
-		);
-
-		// Convert the response to JSON and output it
-		echo json_encode($response);
-	}
-
 	if($_POST['action'] == 'fetch_resident')
 	{
 		// Define the columns that should be returned in the response
@@ -197,19 +128,17 @@ if(isset($_POST['action']))
 		// Convert the response to JSON and output it
 		echo json_encode($response);
 	}
-
-	if($_POST['action'] == 'fetch_maintenance')
+    if($_POST['action'] == 'fetch_maintenance')
 	{
 		// Define the columns that should be returned in the response
 		$columns = array(
-		    'maintenance.id', 
-		    'house.house_number', 
-		    'maintenance.amount', 
-		    'maintenance.month', 
-		    'maintenance.paid_date',
-		    'maintenance.paid_amount',
-		    'maintenance.paid_amount',
-		    'maintenance.created_at'
+		    'id',
+		    'house_id',
+		    'amount',
+            'month',
+            'paid_date',
+            'paid_amount',
+		    'created_at'
 		);
 
 		// Define the table name and the primary key column
@@ -217,23 +146,10 @@ if(isset($_POST['action']))
 		$primaryKey = 'id';
 
 		// Define the base query
-		$query = "
-		SELECT 'maintenance.id', 'house.house_number', 'maintenance.amount', 'maintenance.month', 'maintenance.paid_date', 'maintenance.paid_amount','maintenance.paid_amount','maintenance.created_at' FROM $table
-		JOIN house ON house.id = maintenace.house_id 
-		";
+		$query = "SELECT " . implode(", ", $columns) . " FROM $table";
 
 		// Get the total number of records
-		if($_SESSION['resident_role'] == 'owner' || $_SESSION['resident_role'] == 'resident' )
-		{
-			$stmt = $pdo->prepare('SELECT flat_id FROM allotments WHERE user_id = ?');
-			$stmt->execute([$_SESSION['user_id']]);
-			$flat_id = $stmt->fetch(PDO::FETCH_ASSOC);
-			$count = $pdo->query("SELECT COUNT(*) FROM $table WHERE flat_id = '".$flat_id['flat_id']."'")->fetchColumn();
-		}
-		else
-		{
-			$count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
-		}
+		$count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
 
 		// Define the filter query
 		$filterQuery = '';
@@ -241,26 +157,8 @@ if(isset($_POST['action']))
 		{
 		    $search = $_POST['search']['value'];
 
-		    $filterQuery = " WHERE (bills.bill_title LIKE '%$search%' OR flats.flat_number LIKE '%$search%' OR bills.amount LIKE '%$search%' OR bills.month LIKE '%$search%' OR bills.paid_amount LIKE '%$search%')";
+		    $filterQuery = " WHERE (house_id LIKE '%$search%' OR amount LIKE '%$search%' OR month LIKE '%$search%' OR paid_date LIKE '%$search%' OR paid_amount LIKE '%$search%')";
 		}
-
-		
-		
-		if($_SESSION['user_role'] == 'user')
-		{
-			$stmt = $pdo->prepare('SELECT flat_id FROM allotments WHERE user_id = ?');
-			$stmt->execute([$_SESSION['user_id']]);
-			$flat_id = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($filterQuery != '')
-			{				
-				$filterQuery = " AND bills.flat_id = '".$flat_id["flat_id"]."'";
-			}
-			else
-			{
-				$filterQuery = " WHERE bills.flat_id = '".$flat_id["flat_id"]."'";
-			}
-		}
-
 
 		// Add the filter query to the base query
 		$query .= $filterQuery;
@@ -282,59 +180,145 @@ if(isset($_POST['action']))
 		$stmt = $pdo->query($query);
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		$data = array();
-
-		foreach($results as $row)
-		{
-			$sub_array = array();
-			$sub_array[] = $row['id'];
-			$sub_array[] = $row['bill_title'];
-			$sub_array[] = $row['block_number'] . ' - ' . $row['flat_number'];
-			$sub_array[] = $row['amount'];
-			$sub_array[] = $row['month'];
-			$sub_array[] = ($row['paid_amount'] > 0) ? $row['paid_amount'] : '<span class="badge bg-danger">Not Paid</span>';
-			$sub_array[] = $row['created_at'];
-			$payment_button = '';
-			if($_SESSION['user_role'] == 'user')
-			{
-				/*if(is_null($row['paid_amount']))
-				{
-					$sub_array[] = '<a href="bill_payment.php?id='.$row['id'].'" class="btn btn-warning btn-sm">Payment</a>&nbsp;';
-				}
-				else
-				{
-					$sub_array[] = '<span class="badge bg-success">Payment Success</span>';
-				}*/
-				$sub_array[] = '<a href="bill_payment.php?id='.$row['id'].'" class="btn btn-warning btn-sm">View</a>&nbsp;';
-			}
-			else
-			{
-				$sub_array[] ='<a href="bill_payment.php?id='.$row['id'].'" class="btn btn-warning btn-sm">View</a>&nbsp;<a href="edit_bill.php?id='.$row['id'].'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'.$row['id'].'">Delete</button>';
-			}
-			$data[] = $sub_array;
-		}
-
 		// Build the response
 		$response = array(
 		    "draw" => intval($_REQUEST['draw']),
 		    "recordsTotal" => intval($count),
 		    "recordsFiltered" => intval($countFiltered),
-		    "data" => $data
+		    "data" => $results
 		);
 
 		// Convert the response to JSON and output it
 		echo json_encode($response);
 	}
+	// if($_POST['action'] == 'fetch_maintenance')
+	// {
+	// 	// Define the columns that should be returned in the response
+	// 	$columns = array(
+	// 	    'id',
+	// 	    'house_id',
+	// 	    'amount',
+    //         'month',
+    //         'paid_date',
+    //         'paid_amount',
+	// 	    'created_at'
+	// 	);
+
+	// 	// Define the table name and the primary key column
+	// 	$table = 'maintenance';
+	// 	$primaryKey = 'id';
+
+	// 	// Define the base query
+	// 	// Define the base query
+	// 	$query = "SELECT " . implode(", ", $columns) . " FROM $table";
+
+
+	// 	//Get the total number of records
+	// 	if($_SESSION['resident_role'] == 'owner' || $_SESSION['resident_role'] == 'user' )
+	// 	{
+	// 		$stmt = $pdo->prepare('SELECT house_id FROM resident WHERE resident_id = ?');
+	// 		$stmt->execute([$_SESSION['resident_id']]);
+	// 		$flat_id = $stmt->fetch(PDO::FETCH_ASSOC);
+	// 		$count = $pdo->query("SELECT COUNT(*) FROM $table WHERE resident_id = '".$house_id['house_id']."'")->fetchColumn();
+	// 	}
+	// 	else
+	// 	{
+            
+	// 		$count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
+	// 	}
+
+	// 	// Define the filter query
+	// 	$filterQuery = '';
+	// 	if (!empty($_POST['search']['value'])) 
+	// 	{
+	// 	    $search = $_POST['search']['value'];
+
+	// 	    $filterQuery = " WHERE (house_id LIKE '%$search%' OR amount LIKE '%$search%' OR month LIKE '%$search%' OR paid_date LIKE '%$search%' OR paid_amount LIKE '%$search%')";
+	// 	}
+
+
+		
+		
+	// 	if($_SESSION['resident_role'] == 'owner' || $_SESSION['resident_role'] == 'user')
+	// 	{
+	// 		$stmt = $pdo->prepare('SELECT house_id FROM resident WHERE resident_id = ?');
+	// 		$stmt->execute([$_SESSION['resident_id']]);
+	// 		$house_id = $stmt->fetch(PDO::FETCH_ASSOC);
+	// 		if($filterQuery != '')
+	// 		{				
+	// 			$filterQuery = " AND maintenance.house_id = '".$house_id["house_id"]."'";
+	// 		}
+	// 		else
+	// 		{
+	// 			$filterQuery = " WHERE maintenance.house_id = '".$house_id["house_id"]."'";
+	// 		}
+	// 	}
+
+
+	// 	// Add the filter query to the base query
+	// 	$query .= $filterQuery;
+
+	// 	// Get the number of filtered records
+	// 	$countFiltered = $pdo->query($query)->rowCount();
+
+	// 	// Add sorting to the query
+	// 	$orderColumn = $columns[$_POST['order'][0]['column']];
+	// 	$orderDirection = $_POST['order'][0]['dir'];
+	// 	$query .= " ORDER BY $orderColumn $orderDirection";
+
+	// 	// Add pagination to the query
+	// 	$start = $_POST['start'];
+	// 	$length = $_POST['length'];
+	// 	$query .= " LIMIT $start, $length";
+
+	// 	// Execute the query and fetch the results
+	// 	$stmt = $pdo->query($query);
+	// 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	// 	$data = array();
+
+	// 	foreach($results as $row)
+	// 	{
+	// 		$sub_array = array();
+	// 		$sub_array[] = $row['id'];
+	// 		$sub_array[] = $row['house_id'];
+	// 		$sub_array[] = $row['amount'];
+	// 		$sub_array[] = $row['month'];
+	// 		$sub_array[] = ($row['paid_date'] > 0) ? $row['paid_date'] : '<span class="badge bg-danger">Not Paid</span>';
+	// 		$sub_array[] = ($row['paid_amount'] > 0) ? $row['paid_amount'] : '<span class="badge bg-danger">Not Paid</span>';
+	// 		$sub_array[] = $row['created_at'];
+	// 		$payment_button = '';
+	// 		if($_SESSION['resident_role'] !== 'admin' )
+	// 		{
+	// 			$sub_array[] = '<a href="maintenance_payment.php?id='.$row['id'].'" class="btn btn-warning btn-sm">View</a>&nbsp;';
+	// 		}
+	// 		else
+	// 		{
+	// 			$sub_array[] ='<a href="maintenance_payment.php?id='.$row['id'].'" class="btn btn-warning btn-sm">View</a>&nbsp;<a href="edit_maintenance.php?id='.$row['id'].'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'.$row['id'].'">Delete</button>';
+	// 		}
+	// 		$data[] = $sub_array;
+	// 	}
+
+	// 	// Build the response
+	// 	$response = array(
+	// 	    "draw" => intval($_REQUEST['draw']),
+	// 	    "recordsTotal" => intval($count),
+	// 	    "recordsFiltered" => intval($countFiltered),
+	// 	    "data" => $data
+	// 	);
+
+	// 	// Convert the response to JSON and output it
+	// 	echo json_encode($response);
+	// }
 
 	if($_POST['action'] == 'fetch_complaints')
 	{
 		$columns = array(
-		    'complaints.id',
-		    'users.name',
-		    'flats.flat_number',
-		    'complaints.description',
-		    'complaints.status',
-		    'complaints.created_at'
+		    'id',
+		    'resident_id',
+		    'comment',
+		    'status',
+		    'created_at'
 		);
 		
 		// Define the table name and the primary key column
@@ -342,16 +326,18 @@ if(isset($_POST['action']))
 		$primaryKey = 'id';
 
 		// Define the base query
-		$query = "
-		SELECT complaints.id, users.name, flats.flat_number, flats.block_number, complaints.description, complaints.status, complaints.created_at, complaints.master_comment FROM $table
-		JOIN users ON users.id = complaints.user_id 
-		JOIN flats ON flats.id = complaints.flat_id 
-		";
+		// $query = "
+		// SELECT complaints.id, resident.name, complaints.comment, complaints.status, complaints.created_at FROM $table
+		// JOIN resident ON resident.id = complaints.resident_id
+		// ";
+        $query = "SELECT " . implode(", ", $columns) . " FROM $table";
 
 		// Get the total number of records
-		if($_SESSION['user_role'] == 'user')
+		//$count = $pdo->query("SELECT COUNT(*) FROM $table")->fetchColumn();
+		// Get the total number of records
+		if($_SESSION['resident_role'] == 'user')
 		{
-			$count = $pdo->query("SELECT COUNT(*) FROM $table WHERE user_id = '".$_SESSION["user_id"]."'")->fetchColumn();
+			$count = $pdo->query("SELECT COUNT(*) FROM $table WHERE resident_id = '".$_SESSION["resident_id"]."'")->fetchColumn();
 		}
 		else
 		{
@@ -364,23 +350,94 @@ if(isset($_POST['action']))
 		{
 		    $search = $_POST['search']['value'];
 
-		    $filterQuery = " WHERE (complaints.id LIKE '%$search%' OR users.name LIKE '%$search%' OR flats.flat_number LIKE '%$search%' OR complaints.description LIKE '%$search%' OR complaints.status LIKE '%$search%')";
+		    $filterQuery = " WHERE (id LIKE '%$search%' OR resident_id LIKE '%$search%' OR comment LIKE '%$search%' OR status LIKE '%$search%')";
 		}
 		
-		if($_SESSION['user_role'] == 'user')
+		if($_SESSION['resident_role'] == 'user')
 		{
 			if($filterQuery != '')
 			{				
-				$filterQuery = " AND complaints.user_id = '".$_SESSION['user_id']."'";
+				$filterQuery = " AND complaints.resident_id = '".$_SESSION['resident_id']."'";
 			}
 			else
 			{
-				$filterQuery = " WHERE complaints.user_id = '".$_SESSION['user_id']."'";
+				$filterQuery = " WHERE complaints.resident_id = '".$_SESSION['resident_id']."'";
 			}
 		}
 
 
-		// Add the filter query to the base query
+		// // Add the filter query to the base query
+		// $query .= $filterQuery;
+
+		// // Get the number of filtered records
+		// $countFiltered = $pdo->query($query)->rowCount();
+
+		// // Add sorting to the query
+		// $orderColumn = $columns[$_POST['order'][0]['column']];
+		// $orderDirection = $_POST['order'][0]['dir'];
+		// $query .= " ORDER BY $orderColumn $orderDirection";
+
+		// // Add pagination to the query
+		// $start = $_POST['start'];
+		// $length = $_POST['length'];
+		// $query .= " LIMIT $start, $length";
+
+		// // Execute the query and fetch the results
+		// $stmt = $pdo->query($query);
+		// $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		// $data = array();
+
+		// foreach($results as $row)
+		// {
+		// 	$sub_array = array();
+		// 	$sub_array[] = $row['id'];
+		// 	$sub_array[] = $row['resident_id'];
+		// 	$sub_array[] = $row['comment'];
+
+		// 	if($row['status'] == 'pending')
+		// 	{
+		// 		$sub_array[] = '<span class="badge bg-primary">Pending</span>';
+		// 	}
+
+		// 	if($row['status'] == 'in_progress')
+		// 	{
+		// 		$sub_array[] = '<span class="badge bg-warning">In Progress</span>';
+		// 	}
+
+		// 	if($row['status'] == 'resolved')
+		// 	{
+		// 		$sub_array[] = '<span class="badge bg-success">Resolve</span>';
+		// 	}
+
+		// 	$sub_array[] = $row['created_at'];
+
+		// 	$view_btn = '<a href="view_complaints.php?id='.$row["id"].'" class="btn btn-warning btn-sm">View</a>&nbsp;';
+		// 	$edit_btn = '';
+		// 	$delete_btn = '';
+
+		// 	// if($row['master_comment'] == '')
+		// 	// {
+		// 	// 	$edit_btn = '<a href="edit_complaints.php?id='.$row["id"].'" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
+		// 	// 	$delete_btn = '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'.$row['id'].'">Delete</button>&nbsp;';
+		// 	// }
+
+		// 	$sub_array[] = $view_btn . $edit_btn . $delete_btn;
+
+		// 	$data[] = $sub_array;
+		// }
+
+		// // Build the response
+		// $response = array(
+		//     "draw" => intval($_REQUEST['draw']),
+		//     "recordsTotal" => intval($count),
+		//     "recordsFiltered" => intval($countFiltered),
+		//     "data" => $data
+		// );
+
+		// // Convert the response to JSON and output it
+		// echo json_encode($response);
+        // Add the filter query to the base query
 		$query .= $filterQuery;
 
 		// Get the number of filtered records
@@ -400,54 +457,12 @@ if(isset($_POST['action']))
 		$stmt = $pdo->query($query);
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		$data = array();
-
-		foreach($results as $row)
-		{
-			$sub_array = array();
-			$sub_array[] = $row['id'];
-			$sub_array[] = $row['name'];
-			$sub_array[] = $row['block_number'] . ' - ' . $row['flat_number'];
-			$sub_array[] = $row['description'];
-
-			if($row['status'] == 'pending')
-			{
-				$sub_array[] = '<span class="badge bg-primary">Pending</span>';
-			}
-
-			if($row['status'] == 'in_progress')
-			{
-				$sub_array[] = '<span class="badge bg-warning">In Progress</span>';
-			}
-
-			if($row['status'] == 'resolved')
-			{
-				$sub_array[] = '<span class="badge bg-success">Resolve</span>';
-			}
-
-			$sub_array[] = $row['created_at'];
-
-			$view_btn = '<a href="view_complaint.php?id='.$row["id"].'" class="btn btn-warning btn-sm">View</a>&nbsp;';
-			$edit_btn = '';
-			$delete_btn = '';
-
-			if($row['master_comment'] == '')
-			{
-				$edit_btn = '<a href="edit_complaint.php?id='.$row["id"].'" class="btn btn-sm btn-primary">Edit</a>&nbsp;';
-				$delete_btn = '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'.$row['id'].'">Delete</button>&nbsp;';
-			}
-
-			$sub_array[] = $view_btn . $edit_btn . $delete_btn;
-
-			$data[] = $sub_array;
-		}
-
 		// Build the response
 		$response = array(
 		    "draw" => intval($_REQUEST['draw']),
 		    "recordsTotal" => intval($count),
 		    "recordsFiltered" => intval($countFiltered),
-		    "data" => $data
+		    "data" => $results
 		);
 
 		// Convert the response to JSON and output it

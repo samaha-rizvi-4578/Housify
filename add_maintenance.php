@@ -7,8 +7,6 @@ if(isset($_POST['add_maintenance']))
   	$house_id = $_POST['house_id'];
   	$month = $_POST['month'];
   	$amount = $_POST['amount'];
-  	$paid_amount = $_POST['paid_amount'];
-  	$due_amount= $_POST['due_amount'];
 
   	if (empty($house_id)) 
   	{
@@ -32,26 +30,25 @@ if(isset($_POST['add_maintenance']))
   	// }
 
       $paid_amount = 0;
-      $due_amount = $amount - $paid_amount;
   	// If the form data is valid, update the user's password
   	if (empty($errors)) 
   	{  
       // Insert bill data into the database
-	    $stmt = $pdo->prepare("INSERT INTO maintenance (house_id, amount, month, paid_amount, due_amount) VALUES (?, ?, ?, ?,?)");
+	    $stmt = $pdo->prepare("INSERT INTO maintenance (house_id, amount, month, paid_amount) VALUES (?, ?, ?, ?)");
 
-	    $stmt->execute([$house_id, $amount, $month, $paid_amount,$due_amount ]);
+	    $stmt->execute([$house_id, $amount, $month, $paid_amount ]);
 
 	    // get last inserted ID
 		$maintenance_id = $pdo->lastInsertId();
 
-$resident_id = $pdo->query("SELECT id FROM resident WHERE role = 'owner' AND house_id = '".$house_id."'")->fetchColumn();
+$resident_id = $pdo->query("SELECT id FROM resident WHERE house_id = '".$house_id."'")->fetchColumn();
 
 	    // insert notification data into notifications table
 		$message = "New Maintenance bill added. Amount: ".$amount.", Month: ".$month."";
 		
-		$notification_link = 'maintenance_payment.php?id='.$maintenance_id.'&action=notification';
-		$stmt = $pdo->prepare("INSERT INTO notifications (resident_id, notification_type, event_id, message, link) VALUES (?, ?, ?, ?, ?)");
-		$stmt->execute([$resident_id, 'Maintenance Bill', $maintenance_id, $message, $notification_link]);
+		// $notification_link = 'maintenance_payment.php?id='.$maintenance_id.'&action=notification';
+		// $stmt = $pdo->prepare("INSERT INTO notifications (resident_id, notification_type, event_id, message, link) VALUES (?, ?, ?, ?, ?)");
+		// $stmt->execute([$resident_id, 'Maintenance Bill', $maintenance_id, $message, $notification_link]);
 
   		$_SESSION['success'] = 'New Maintenance Bill Data Added';
 

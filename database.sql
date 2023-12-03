@@ -47,7 +47,7 @@ CREATE TABLE `resident` (
   `ssn` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `house_id` int(11) UNSIGNED NOT NULL,    
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `role` enum('admin','resident','owner') COLLATE utf8_unicode_ci NOT NULL,
+  `role` enum('admin','user') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -79,7 +79,6 @@ CREATE TABLE `maintenance` (
   `month` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `paid_date` date DEFAULT NULL,
   `paid_amount` decimal(10,2) DEFAULT NULL,
-  `due_amount` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

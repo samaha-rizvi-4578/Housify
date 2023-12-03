@@ -14,22 +14,31 @@ if (isset($_POST['edit_resident'])) {
     $house_id = $_POST['house_id'];
     $password = $_POST['password'];
     $role = $_POST['role'];
-    $allowed_roles = ['admin', 'resident', 'owner'];
+    $allowed_roles = ['admin', 'user'];
+    echo $ssn;
+    echo $name;
+    echo $house_id;
+    echo $password;
+    echo $role;
     if (empty($name)) {
         $errors[] = 'Please enter your name';
     }
     if (empty($ssn)) {
+        
         $errors[] = 'Please enter your social security number (SSN)';
     }
     if (empty($house_id)) {
         $errors[] = 'Please enter your house id';
     }
     if (empty($password)) {
-        $errors['password'] = 'Please enter your password';
+        echo $password;
+        $errors[] = 'Please enter your password';
     } else {
+        echo $password;
         $password = password_hash($password, PASSWORD_DEFAULT);
     }
     if (empty($role)) {
+        echo $role;
         $errors[] = 'Please enter your role';
     } //role ka radio button hai 
     else if (!in_array($role, $allowed_roles)) {
@@ -37,28 +46,23 @@ if (isset($_POST['edit_resident'])) {
     }
     // If the form data is valid, update the user's password
     if (empty($errors)) {
-        if (empty($password)) {
+        $id = $_GET['id'];
             $sql = "UPDATE resident SET name = ?, ssn = ?, house_id = ?,password = ?, role = ? WHERE id = ?";
 
+            echo $sql;
+
             $pdo->prepare($sql)->execute([$name, $ssn, $house_id, $password, $role, $id]);
-        }
-        // else
-        // {
-        // 	$password = password_hash($password, PASSWORD_DEFAULT);
 
-        // 	$sql = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
-
-        // 	$pdo->prepare($sql)->execute([$name, $email, $password, $id]);
-        // }
 
         $_SESSION['success'] = 'Resident Data has been edited';
 
-        header('location:resident.php');
-        exit();
+       header('location:resident.php');
+       exit();
     }
 }
 
 if (isset($_GET['id'])) {
+    $id = $_GET['id'];
     // Prepare a SELECT statement to retrieve the flats's details
     $stmt = $pdo->prepare("SELECT * FROM resident WHERE id = ?");
     $stmt->execute([$_GET['id']]);
@@ -108,19 +112,17 @@ include('header.php');
                     </div>
                     <div class="mb-3">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" value="<?php echo isset($resident['password']) ? $resident['password'] : ''; ?>">
                     </div>
-                    <input type="hidden" name="password" value="<?php echo isset($resident['password']) ? $resident['password'] : ''; ?>" />
+                
                     <div class="mb-3">
                         <label for="role">Role</label><br>
                         <input type="radio" id="admin" name="role" value="admin" <?php echo (isset($resident['role']) && $resident['role'] === 'admin') ? 'checked' : ''; ?>>
                         <label for="admin">Admin</label><br>
-                        <input type="radio" id="resident" name="role" value="resident" <?php echo (isset($resident['role']) && $resident['role'] === 'resident') ? 'checked' : ''; ?>>
-                        <label for="resident">Resident</label><br>
-                        <input type="radio" id="owner" name="role" value="owner" <?php echo (isset($resident['role']) && $resident['role'] === 'owner') ? 'checked' : ''; ?>>
-                        <label for="owner">Owner</label>
+                        <input type="radio" id="user" name="role" value="user" <?php echo (isset($resident['role']) && $resident['role'] === 'user') ? 'checked' : ''; ?>>
+                        <label for="user">User</label><br>
                     </div>
-                    <input type="hidden" name="role" value="<?php echo isset($resident['role']) ? $resident['role'] : ''; ?>" />
+                 
                     <button type="submit" name="edit_resident" class="btn btn-primary">Edit</button>
                 </form>
             </div>

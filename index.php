@@ -15,12 +15,16 @@ $errorMessage = '';
 if(isset($_POST['btn_login']))
 {
     // Get the email and password entered by the user
-    $ssn = $_POST['ssn'];
+    // $ssn = $_POST['ssn'];
     
-    $password = $_POST['password'];
+    // $password = $_POST['password'];
 
     $ssn = $_POST['ssn'];
     $password = $_POST['password'];
+    if (empty($ssn)) 
+    {
+        $errors[] = 'Please enter a ssn.';
+    }
 
     // Validate email address format
     // if (!filter_var($ssn, FILTER_VALIDATE_EMAIL)) 
@@ -48,8 +52,9 @@ if(isset($_POST['btn_login']))
         {
             echo "$ssn";
             echo "$password";
-            $passwordHash = $resident['password'];
-            $passwordHash = password_hash($passwordHash, PASSWORD_DEFAULT);
+           // $passwordHash = $resident['password'];
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+          //  $passwordHash = password_hash($passwordHash, PASSWORD_DEFAULT);
             echo "$passwordHash";
 
             // Use the password_verify function to check if the entered password matches the password hash
@@ -61,7 +66,7 @@ if(isset($_POST['btn_login']))
                 $_SESSION['resident_id'] = $resident['id'];
                 $_SESSION['resident_role'] = $resident['role'];
                 $_SESSION['resident_name'] = $resident['name'];
-                 if($resident['role'] == 'resident' || $resident['role'] == 'owner')
+                 if($resident['role'] == 'user')
                  {
                      header('Location: maintenance.php');
                  }
@@ -146,46 +151,46 @@ if(isset($_POST['btn_login']))
 
 <script>
 
-$(document).ready(function() {
-  // Disable HTML5 validation
-  /*$('#login-form').attr('novalidate', 'novalidate');
+// $(document).ready(function() {
+//   // Disable HTML5 validation
+//   /*$('#login-form').attr('novalidate', 'novalidate');
 
-  // Validate form input on submit
-  $('#login-form').on('submit', function(e) {
-    // Prevent form submission
-    e.preventDefault();
+//   // Validate form input on submit
+//   $('#login-form').on('submit', function(e) {
+//     // Prevent form submission
+//     e.preventDefault();
 
-    // Remove any existing error messages
-    $('#email').removeClass('is-invalid');
-    $('#password').removeClass('is-invalid');
-    $('.invalid-feedback').hide();
+//     // Remove any existing error messages
+//     $('#email').removeClass('is-invalid');
+//     $('#password').removeClass('is-invalid');
+//     $('.invalid-feedback').hide();
 
-    // Get form input values
-    var email = $('#email').val().trim();
-    var password = $('#password').val().trim();
+//     // Get form input values
+//     var email = $('#email').val().trim();
+//     var password = $('#password').val().trim();
 
-    // Validate email address format
-    if (!isValidEmail(email)) {
-      $('#email').addClass('is-invalid');
-      $('#email').next('.invalid-feedback').show();
-      return;
-    }
+//     // Validate email address format
+//     if (!isValidEmail(email)) {
+//       $('#email').addClass('is-invalid');
+//       $('#email').next('.invalid-feedback').show();
+//       return;
+//     }
 
-    // Validate password field is not empty
-    if (password === '') {
-      $('#password').addClass('is-invalid');
-      $('#password').next('.invalid-feedback').show();
-      return;
-    }
+//     // Validate password field is not empty
+//     if (password === '') {
+//       $('#password').addClass('is-invalid');
+//       $('#password').next('.invalid-feedback').show();
+//       return;
+//     }
 
-    // Submit form if input is valid
-    this.submit();
-  });
-});
+//     // Submit form if input is valid
+//     this.submit();
+//   });
+// });
 
-// Function to validate email address format
-function isValidEmail(email) {
-  var emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  return emailRegex.test(email);
-}*/
+// // Function to validate email address format
+// function isValidEmail(email) {
+//   var emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+//   return emailRegex.test(email);
+// }*/
 </script>

@@ -91,7 +91,7 @@ $notification = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <a class="nav-link" href="maintenance.php">
                             Maintenance Bills
                         </a>
-                        <a class="nav-link" href="complaint.php">
+                        <a class="nav-link" href="complaints.php">
                             Complaints
                         </a>
                         <a class="nav-link" href="visitor.php">
@@ -115,13 +115,13 @@ $notification = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php
                         }
 
-                        if($_SESSION['resident_role'] == 'resident')
+                        if($_SESSION['resident_role'] == 'user')
                         {
                         ?>
                         <a class="nav-link" href="maintenance.php">
                             Bills
                         </a>
-                        <a class="nav-link" href="complaint.php">
+                        <a class="nav-link" href="complaints.php">
                             Complaints
                         </a>
                         <a class="nav-link" href="visitor.php">

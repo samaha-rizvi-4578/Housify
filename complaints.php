@@ -2,7 +2,7 @@
 
 require_once 'config.php';
 
-if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin')) 
+if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin' || $_SESSION['resident_role'] !== 'user')) 
 {
   	header('Location: logout.php');
   	exit();
@@ -10,10 +10,10 @@ if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin')
 
 if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete' && $_SESSION['resident_role'] == 'admin')
 {
-	$stmt = $pdo->prepare("DELETE FROM maintenance WHERE id = ?");
+	$stmt = $pdo->prepare("DELETE FROM complaints WHERE id = ?");
   	$stmt->execute([$_GET['id']]);
-  	$_SESSION['success'] = 'Maintenance Bills Data has been removed';
-  	header('location:maintenance.php');
+  	$_SESSION['success'] = 'Complaints Data has been removed';
+  	header('location:complaints.php');
 }
 
 include('header.php');
@@ -21,10 +21,10 @@ include('header.php');
 ?>
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Maintenance Bills Management</h1>
+    <h1 class="mt-4">Complaints Management</h1>
     <ol class="breadcrumb mb-4">
     	<li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item active">Maintenance Bill Management</li>
+        <li class="breadcrumb-item active">Complaints Management</li>
     </ol>
     <?php
 
@@ -40,14 +40,14 @@ include('header.php');
 		<div class="card-header">
 			<div class="row">
 				<div class="col col-6">
-					<h5 class="card-title">Maintenance Bills Management</h5>
+					<h5 class="card-title">Complaints Management</h5>
 				</div>
 				<div class="col col-6">
 					<?php
-					if($_SESSION['resident_role'] == 'admin')
+					if($_SESSION['resident_role'] == 'user')
 					{
 					?>
-					<div class="float-end"><a href="add_maintenance.php" class="btn btn-success btn-sm">Add</a></div>
+					<div class="float-end"><a href="add_complaint.php" class="btn btn-success btn-sm">Add</a></div>
 					<?php
 					}
 					?>
@@ -56,15 +56,13 @@ include('header.php');
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered table-striped table-bordered" id="maintenance-table">
+				<table class="table table-bordered table-striped table-bordered" id="complaints-table">
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>House ID</th>
-							<th>Amount</th>
-							<th>Month</th>
-							<th>Paid Date</th>
-							<th>Paid Amount</th>
+							<th>User ID</th>
+							<th>Complaint</th>
+							<th>Status</th>
 							<th>Updated At</th>
 							<th>Action</th>
 						</tr>
@@ -92,35 +90,33 @@ include('footer.php');
 <script>
 
 $(document).ready(function() {
-    $('#maintenance-table').DataTable({
+    $('#complaints-table').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
         	url: 'action.php',
         	method:"POST",
-        	data: {action : 'fetch_maintenance'}
+        	data: {action : 'fetch_complaints'}
         },
-        "columns": [
+		"columns": [
             { "data": "id" },
-            { "data": "house_id" },
-            { "data": "amount" },
-            { "data": "month" },
-            { "data" : "paid_date"},
-            { "data" : "paid_amount"},
+            { "data": "resident_id" },
+            { "data": "comment" },
+            { "data" :"status"},
             { "data": "created_at"},
             {
         		"data": null,
         		"render": function(data, type, row) {
-          			return '<a href="edit_maintenance.php?id='+row.id+'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'+row.id+'">Delete</button>';
+          			return '<a href="edit_complaint.php?id='+row.id+'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'+row.id+'">Delete</button>';
         		}
         	}
         ]
     });
 
     $(document).on('click', '.delete_btn', function(){
-    	if(confirm("Are you sure you want to remove this Maintenance Bill data?"))
+    	if(confirm("Are you sure you want to remove this Complaint data?"))
     	{
-    		window.location.href = 'maintenance.php?action=delete&id=' + $(this).data('id') + '';
+    		window.location.href = 'complaints.php?action=delete&id=' + $(this).data('id') + '';
     	}
     });
 });

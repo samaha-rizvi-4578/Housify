@@ -10,7 +10,7 @@ if(isset($_POST['add_resident']))
   	$house_id = $_POST['house_id'];
   	$password = $_POST['password'];
   	$role = $_POST['role'];
-    $allowed_roles = ['admin', 'resident', 'owner'];
+    $allowed_roles = ['admin', 'user'];
   	if (empty($name)) 
   	{
 	    $errors[] = 'Please enter your name';
@@ -109,10 +109,8 @@ include('header.php');
                         <label for="role">Role</label><br>
                         <input type="radio" id="admin" name="role" value="admin" checked>
                         <label for="admin">Admin</label><br>
-                        <input type="radio" id="resident" name="role" value="resident">
-                        <label for="resident">Resident</label><br>
-                        <input type="radio" id="owner" name="role" value="owner">
-                        <label for="owner">Owner</label>
+                        <input type="radio" id="user" name="role" value="user">
+                        <label for="user">User</label><br>
                     </div>
 				  	<button type="submit" name="add_resident" class="btn btn-primary">Submit</button>
 				</form>
