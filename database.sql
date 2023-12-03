@@ -121,9 +121,7 @@ CREATE TABLE `facility` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `booked_status` enum('booked', 'vacant') COLLATE utf8_unicode_ci NOT NULL,
-   `alloted_start_datetime` datetime DEFAULT NULL,
-  `alloted_end_datetime` datetime DEFAULT NULL,
+  `booked_status` enum('booked', 'available') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
