@@ -77,9 +77,6 @@ if($start_date != '' && $end_date != '' && $report_type != '')
 					<div class="col-md-9">
 						<h5 class="card-title">Maintenance Bill Data for '.$start_date.' to '.$end_date.' Date</h5>
 					</div>
-					<div class="col-md-3">
-						<a href="reports.php?action=export&type=Maintenance_Bill&start_date='.$start_date.'&end_date='.$end_date.'" class="btn btn-success btn-sm float-end">Export</a>
-					</div>
 				</div>
 			</div>
 			<div class="card-body">
@@ -171,9 +168,6 @@ if($start_date != '' && $end_date != '' && $report_type != '')
 				<div class="row">
 					<div class="col-md-9">
 						<h5 class="card-title">Complaint Data for '.$start_date.' to '.$end_date.' Date</h5>
-					</div>
-					<div class="col-md-3">
-						<a href="reports.php?action=export&type=Complaint&start_date='.$start_date.'&end_date='.$end_date.'" class="btn btn-success btn-sm float-end">Export</a>
 					</div>
 				</div>
 			</div>
@@ -275,9 +269,7 @@ if($start_date != '' && $end_date != '' && $report_type != '')
 					<div class="col-md-9">
 						<h5 class="card-title">Visitor Data for '.$start_date.' to '.$end_date.' Date</h5>
 					</div>
-					<div class="col-md-3">
-						<a href="reports.php?action=export&type=Visitor&start_date='.$start_date.'&end_date='.$end_date.'" class="btn btn-success btn-sm float-end">Export</a>
-					</div>
+					
 				</div>
 			</div>
 			<div class="card-body">
@@ -392,106 +384,106 @@ if(isset($_GET['action'], $_GET['type'], $_GET['start_date'], $_GET['end_date'])
 		$report_type = $_GET['type'];
 	}
 
-	if($action == 'export' && $report_type != '' && $start_date != '' && $end_date != '')
-	{
-		if($report_type == 'Maintenance_Bill')
-		{
-			$stmt = $pdo->prepare('SELECT maintenance.id,maintenance.resident_id, maintenance.amount, maintenance.month, maintenance.paid_date, maintenance.paid_amoun FROM maintenance WHERE maintenance.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY maintenance.id DESC LIMIT '.$offset.', '.$records_per_page.'" ORDER BY bills.id DESC');
-			$stmt->execute();
-			$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	// if($action == 'export' && $report_type != '' && $start_date != '' && $end_date != '')
+	// {
+	// 	if($report_type == 'Maintenance_Bill')
+	// 	{
+	// 		$stmt = $pdo->prepare('SELECT maintenance.id,maintenance.resident_id, maintenance.amount, maintenance.month, maintenance.paid_date, maintenance.paid_amoun FROM maintenance WHERE maintenance.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY maintenance.id DESC LIMIT '.$offset.', '.$records_per_page.'" ORDER BY bills.id DESC');
+	// 		$stmt->execute();
+	// 		$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			// Output headers
-			header('Content-Type: text/csv; charset=utf-8');
-			header('Content-Disposition: attachment; filename="bill_payment_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
+	// 		// Output headers
+	// 		header('Content-Type: text/csv; charset=utf-8');
+	// 		header('Content-Disposition: attachment; filename="bill_payment_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
 
-			// Output CSV data
-			$output = fopen('php://output', 'w');
-			fputcsv($output, array('Bill Title', 'Flat Number', 'Amount', 'Month', 'Paid Date', 'Payment Method', 'Paid Amount', 'Status'));
+	// 		// Output CSV data
+	// 		$output = fopen('php://output', 'w');
+	// 		fputcsv($output, array('Bill Title', 'Flat Number', 'Amount', 'Month', 'Paid Date', 'Payment Method', 'Paid Amount', 'Status'));
 
-			foreach($records as $record)
-			{
-				$sub_array = array();
+	// 		foreach($records as $record)
+	// 		{
+	// 			$sub_array = array();
 
-				$sub_array[] = $record['bill_title'];
-				$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
-				$sub_array[] = $record['amount'];
-				$sub_array[] = $record['month'];
-				$sub_array[] = $record['paid_date'];
-				$sub_array[] = $record['payment_method'];
-				$sub_array[] = $record['paid_amount'];
-				$sub_array[] = ($record['paid_date'] == '') ? 'Not Paid' : 'Paid';
-				fputcsv($output, $sub_array);
-			}
+	// 			$sub_array[] = $record['bill_title'];
+	// 			$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
+	// 			$sub_array[] = $record['amount'];
+	// 			$sub_array[] = $record['month'];
+	// 			$sub_array[] = $record['paid_date'];
+	// 			$sub_array[] = $record['payment_method'];
+	// 			$sub_array[] = $record['paid_amount'];
+	// 			$sub_array[] = ($record['paid_date'] == '') ? 'Not Paid' : 'Paid';
+	// 			fputcsv($output, $sub_array);
+	// 		}
 
-			fclose($output);
-			exit;
-		}
+	// 		fclose($output);
+	// 		exit;
+	// 	}
 
-		if($report_type == 'Complaint')
-		{
-			$stmt = $pdo->prepare('SELECT complaints.id, users.name, flats.flat_number, flats.block_number, complaints.description, complaints.status, complaints.created_at, complaints.master_comment FROM complaints JOIN users ON users.id = complaints.user_id JOIN flats ON flats.id = complaints.flat_id WHERE complaints.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY complaints.id');
-			$stmt->execute();
-			$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	// 	if($report_type == 'Complaint')
+	// 	{
+	// 		$stmt = $pdo->prepare('SELECT complaints.id, users.name, flats.flat_number, flats.block_number, complaints.description, complaints.status, complaints.created_at, complaints.master_comment FROM complaints JOIN users ON users.id = complaints.user_id JOIN flats ON flats.id = complaints.flat_id WHERE complaints.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY complaints.id');
+	// 		$stmt->execute();
+	// 		$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			// Output headers
-			header('Content-Type: text/csv; charset=utf-8');
-			header('Content-Disposition: attachment; filename="complaint_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
+	// 		// Output headers
+	// 		header('Content-Type: text/csv; charset=utf-8');
+	// 		header('Content-Disposition: attachment; filename="complaint_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
 
-			// Output CSV data
-			$output = fopen('php://output', 'w');
-			fputcsv($output, array('User Name', 'Flat Number', 'Complaint', 'Status', 'Updated At'));
+	// 		// Output CSV data
+	// 		$output = fopen('php://output', 'w');
+	// 		fputcsv($output, array('User Name', 'Flat Number', 'Complaint', 'Status', 'Updated At'));
 
-			foreach($records as $record)
-			{
-				$sub_array = array();
+	// 		foreach($records as $record)
+	// 		{
+	// 			$sub_array = array();
 
-				$sub_array[] = $record["name"];
-				$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
-				$sub_array[] = $record["description"];
-				$sub_array[] = $record["status"];
-				$sub_array[] = $record["created_at"];
-				fputcsv($output, $sub_array);
-			}
+	// 			$sub_array[] = $record["name"];
+	// 			$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
+	// 			$sub_array[] = $record["description"];
+	// 			$sub_array[] = $record["status"];
+	// 			$sub_array[] = $record["created_at"];
+	// 			fputcsv($output, $sub_array);
+	// 		}
 
-			fclose($output);
-			exit;
-		}
+	// 		fclose($output);
+	// 		exit;
+	// 	}
 
-		if($report_type == 'Visitor')
-		{
-			$stmt = $pdo->prepare('SELECT visitors.id, flats.flat_number, flats.block_number, visitors.name, visitors.phone, visitors.address, visitors.person_to_meet, visitors.reason, visitors.in_datetime, visitors.out_remark, visitors.out_datetime, visitors.is_in_out FROM visitors JOIN flats ON flats.id = visitors.flat_id  WHERE visitors.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY visitors.id');
-			$stmt->execute();
-			$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	// 	if($report_type == 'Visitor')
+	// 	{
+	// 		$stmt = $pdo->prepare('SELECT visitors.id, flats.flat_number, flats.block_number, visitors.name, visitors.phone, visitors.address, visitors.person_to_meet, visitors.reason, visitors.in_datetime, visitors.out_remark, visitors.out_datetime, visitors.is_in_out FROM visitors JOIN flats ON flats.id = visitors.flat_id  WHERE visitors.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY visitors.id');
+	// 		$stmt->execute();
+	// 		$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			// Output headers
-			header('Content-Type: text/csv; charset=utf-8');
-			header('Content-Disposition: attachment; filename="visitor_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
+	// 		// Output headers
+	// 		header('Content-Type: text/csv; charset=utf-8');
+	// 		header('Content-Disposition: attachment; filename="visitor_report_for_'.$start_date.'_to_'.$end_date.'.csv"');
 
-			// Output CSV data
-			$output = fopen('php://output', 'w');
-			fputcsv($output, array('Flat Number', 'Visitor Name', 'Visitor Phone', 'Address', 'Person to Meet', 'Reason to Meet', 'In Time', 'Out Remark', 'Out Time', 'Status'));
+	// 		// Output CSV data
+	// 		$output = fopen('php://output', 'w');
+	// 		fputcsv($output, array('Flat Number', 'Visitor Name', 'Visitor Phone', 'Address', 'Person to Meet', 'Reason to Meet', 'In Time', 'Out Remark', 'Out Time', 'Status'));
 
-			foreach($records as $record)
-			{
-				$sub_array = array();
+	// 		foreach($records as $record)
+	// 		{
+	// 			$sub_array = array();
 
-				$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
-				$sub_array[] = $record['name'];
-				$sub_array[] = $record['phone'];
-				$sub_array[] = $record['address'];
-				$sub_array[] = $record['person_to_meet'];
-				$sub_array[] = $record['reason'];
-				$sub_array[] = $record['in_datetime'];
-				$sub_array[] = $record['out_remark'];
-				$sub_array[] = $record['out_datetime'];
-				$sub_array[] = $record["is_in_out"];
-				fputcsv($output, $sub_array);
-			}
+	// 			$sub_array[] = $record['block_number'] . ' - ' . $record['flat_number'];
+	// 			$sub_array[] = $record['name'];
+	// 			$sub_array[] = $record['phone'];
+	// 			$sub_array[] = $record['address'];
+	// 			$sub_array[] = $record['person_to_meet'];
+	// 			$sub_array[] = $record['reason'];
+	// 			$sub_array[] = $record['in_datetime'];
+	// 			$sub_array[] = $record['out_remark'];
+	// 			$sub_array[] = $record['out_datetime'];
+	// 			$sub_array[] = $record["is_in_out"];
+	// 			fputcsv($output, $sub_array);
+	// 		}
 
-			fclose($output);
-			exit;
-		}
-	}
+	// 		fclose($output);
+	// 		exit;
+	// 	}
+	// }
 }
 
 

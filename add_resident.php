@@ -97,10 +97,21 @@ include('header.php');
 				    	<label for="ssn">SSN</label>
 				    	<input type="text" class="form-control" id="ssn" name="ssn" placeholder="Enter ssn">
 				  	</div>
-                      <div class="mb-3">
-				    	<label for="house_id">House ID</label>
-				    	<input type="number" class="form-control" id="house_id" name="house_id" placeholder="Enter House ID">
-				  	</div>
+					  <div class="mb-3">
+                        <label for="house_id">House ID</label>
+                        <select id="house_id" name="house_id" class="form-control">
+                            <option value="">Select House</option>
+                            <?php
+                            // Query to get flat numbers from flats table
+                            $stmt = $pdo->prepare('SELECT id, house_number, block_number FROM house where house.id not in (select house_id from resident) ORDER BY house_number ASC');
+                            $stmt->execute(); // Remove [$_SESSION['resident_id']]
+                            $house_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($house_result as $house) {
+                                echo "<option value=\"" . $house['id'] . "\">" . $house['block_number'] . ' - ' . $house['house_number'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
 				  	<div class="mb-3">
 				    	<label for="password">Password</label>
 				    	<input type="password" class="form-control" id="password" name="password" placeholder="Enter password">

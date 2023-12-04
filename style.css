@@ -3,7 +3,8 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    font-weight: bold; /* Increase font weight */
+    font-size: 20px;
+    /* font-weight: bold; Increase font weight */
 }
 
 #login {
@@ -24,7 +25,7 @@ body {
     border-radius: 10px;
     display: block;
     margin: auto;
-    font-size: medium
+    font-size: medium;
 }
 
 .btn-primary:hover {
@@ -73,7 +74,7 @@ body {
     background-color: #563d7c;
     color: #fff;
     border: 1px solid #ffffff;
-    padding: 10px;
+    padding: 5px;
     border-radius: 5px;
     
 }
@@ -113,8 +114,8 @@ body {
     width: 100%;
     color: #ffffff;
     display: block;
-    padding: 10px;
-    margin-bottom: 10px;
+    /* padding: 10px; */
+    /* margin-bottom: 10px; */
     border: 1px solid #563d7c;
 }
 
@@ -124,11 +125,12 @@ body {
 
 .sb-sidenav-footer {
     background-color: #6f42c1;
+    border-top: 1px solid #fff;
     color: #ffffff;
     position: fixed;
     bottom: 0;
     width: 250px;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 #layoutSidenav_content {
