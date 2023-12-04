@@ -60,7 +60,8 @@ include('header.php');
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>User ID</th>
+							<th>Resident ID</th>
+							<th>Resident Name</th>
 							<th>Complaint</th>
 							<th>Status</th>
 							<th>Updated At</th>
@@ -97,20 +98,7 @@ $(document).ready(function() {
         	url: 'action.php',
         	method:"POST",
         	data: {action : 'fetch_complaints'}
-        },
-		"columns": [
-            { "data": "id" },
-            { "data": "resident_id" },
-            { "data": "comment" },
-            { "data" :"status"},
-            { "data": "created_at"},
-            {
-        		"data": null,
-        		"render": function(data, type, row) {
-          			return '<a href="edit_complaint.php?id='+row.id+'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'+row.id+'">Delete</button>';
-        		}
-        	}
-        ]
+        }
     });
 
     $(document).on('click', '.delete_btn', function(){
