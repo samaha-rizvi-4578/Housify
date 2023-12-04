@@ -19,16 +19,17 @@ if (!$table_exists)
     $pdo->exec($sql);
 
     // Insert the default admin user if it doesn't already exist
-	$username = 'admin';
+	$username = 'Admin';
 	$userssn = '123456789';
-	$password = password_hash('password', PASSWORD_DEFAULT);
+	$password = password_hash('admin', PASSWORD_DEFAULT);
 	$user_check_sql = "SELECT 1 FROM resident WHERE ssn=$userssn LIMIT 1";
 	$user_exists = $pdo->query($user_check_sql) !== false;
 
 	if (!$user_exists) {
         $sql = "INSERT INTO house (house_number, street_name, block_number) VALUES (101, 'Green Street', 'A')";
-        $sql = "INSERT INTO resident (name, ssn, house_id, password, role) VALUES (?, ?, 1, ?, 'admin')";
-	    $pdo->prepare($sql)->execute([$username, $useremail, $password]);
+		$house_id = $pdo->query("SELECT id FROM house WHERE LIMIT 1")->fetchColumn();
+        $sql = "INSERT INTO resident (name, ssn, house_id, password, role) VALUES (?, ?, ?, ?, 'admin')";
+	    $pdo->prepare($sql)->execute([$username, $useremail, $house_id, $password]);
 	}
 
 	// Output a message indicating the setup was successful

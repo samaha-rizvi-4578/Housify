@@ -60,7 +60,7 @@ include('header.php');
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>House ID</th>
+							<th>Resident ID</th>
 							<th>Amount</th>
 							<th>Month</th>
 							<th>Paid Date</th>
@@ -99,22 +99,7 @@ $(document).ready(function() {
         	url: 'action.php',
         	method:"POST",
         	data: {action : 'fetch_maintenance'}
-        },
-        "columns": [
-            { "data": "id" },
-            { "data": "house_id" },
-            { "data": "amount" },
-            { "data": "month" },
-            { "data" : "paid_date"},
-            { "data" : "paid_amount"},
-            { "data": "created_at"},
-            {
-        		"data": null,
-        		"render": function(data, type, row) {
-          			return '<a href="edit_maintenance.php?id='+row.id+'" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="'+row.id+'">Delete</button>';
-        		}
-        	}
-        ]
+        }
     });
 
     $(document).on('click', '.delete_btn', function(){

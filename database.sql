@@ -75,7 +75,7 @@ CREATE TABLE `visitor` (
 
 CREATE TABLE `maintenance` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `house_id` int(11) UNSIGNED NOT NULL,
+  `resident_id` int(11) UNSIGNED NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `month` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `paid_date` date DEFAULT NULL,
@@ -134,9 +134,7 @@ CREATE TABLE `service` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `booked_status` enum('booked', 'vacant') COLLATE utf8_unicode_ci NOT NULL,
-   `alloted_start_datetime` datetime DEFAULT NULL,
-  `alloted_end_datetime` datetime DEFAULT NULL,
+  `booked_status` enum('booked', 'available') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -148,13 +146,12 @@ CREATE TABLE `service` (
 CREATE TABLE `payment` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `resident_id` int(11) UNSIGNED NOT NULL,
-  `facility_id` int(11) UNSIGNED NOT NULL,
-  `service_id` int(11) UNSIGNED NOT NULL,
+  `facility_id` int(11) UNSIGNED DEFAULT NULL,
+  `service_id` int(11) UNSIGNED DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
   `month` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `paid_date` date DEFAULT NULL,
   `paid_amount` decimal(10,2) DEFAULT NULL,
-  `due_amount` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -178,7 +175,7 @@ ALTER TABLE `visitor`
 -- Constraints for table `complaints`
 --
 ALTER TABLE `maintenance`
-  ADD CONSTRAINT `maintenace_fk` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `maintenace_fk` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `notifications`

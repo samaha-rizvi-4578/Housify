@@ -119,13 +119,22 @@ $notification = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         {
                         ?>
                         <a class="nav-link" href="maintenance.php">
-                            Bills
+                            Maintenance
                         </a>
                         <a class="nav-link" href="complaints.php">
                             Complaints
                         </a>
                         <a class="nav-link" href="visitor.php">
                             Visitors
+                        </a>
+                        <a class="nav-link" href="facility.php">
+                            Facilities
+                        </a>
+                        <a class="nav-link" href="service.php">
+                            Services
+                        </a>
+                        <a class="nav-link" href="Payment.php">
+                            Payments
                         </a>
                         <?php
                         }

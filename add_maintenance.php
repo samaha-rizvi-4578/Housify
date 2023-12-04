@@ -4,13 +4,13 @@ require_once 'config.php';
 if(isset($_POST['add_maintenance']))
 {
 	// Validate the form data
-  	$house_id = $_POST['house_id'];
+  	$resident_id = $_POST['resident_id'];
   	$month = $_POST['month'];
   	$amount = $_POST['amount'];
 
-  	if (empty($house_id)) 
+  	if (empty($resident_id)) 
   	{
-	    $errors[] = 'Please Select House ID';
+	    $errors[] = 'Please Select Resident ID';
   	}
       if (empty($amount)) 
   	{
@@ -20,35 +20,27 @@ if(isset($_POST['add_maintenance']))
   	{
  	   $errors[] = 'Please enter Bill Month';
   	}
-    //   if (empty($paid_amount)) 
-  	// {
-    // 	$errors[] = 'Please enter Paid Bill Amount';
-  	// } 
-  	// else if (!is_numeric($paid_amount)) 
-  	// {
-    // 	$errors[] = 'Amount must be a number';
-  	// }
 
       $paid_amount = 0;
   	// If the form data is valid, update the user's password
   	if (empty($errors)) 
   	{  
       // Insert bill data into the database
-	    $stmt = $pdo->prepare("INSERT INTO maintenance (house_id, amount, month, paid_amount) VALUES (?, ?, ?, ?)");
+	    $stmt = $pdo->prepare("INSERT INTO maintenance (resident_id, amount, month, paid_amount) VALUES (?, ?, ?, ?)");
 
-	    $stmt->execute([$house_id, $amount, $month, $paid_amount ]);
+	    $stmt->execute([$resident_id, $amount, $month, $paid_amount ]);
 
 	    // get last inserted ID
-		$maintenance_id = $pdo->lastInsertId();
+		$id = $pdo->lastInsertId();
 
-$resident_id = $pdo->query("SELECT id FROM resident WHERE house_id = '".$house_id."'")->fetchColumn();
+$resident_id = $pdo->query("SELECT id FROM resident WHERE id = '".$resident_id."'")->fetchColumn();
 
 	    // insert notification data into notifications table
 		$message = "New Maintenance bill added. Amount: ".$amount.", Month: ".$month."";
 		
-		// $notification_link = 'maintenance_payment.php?id='.$maintenance_id.'&action=notification';
-		// $stmt = $pdo->prepare("INSERT INTO notifications (resident_id, notification_type, event_id, message, link) VALUES (?, ?, ?, ?, ?)");
-		// $stmt->execute([$resident_id, 'Maintenance Bill', $maintenance_id, $message, $notification_link]);
+		$notification_link = 'maintenance_payment.php?id='.$id.'&action=notification';
+		$stmt = $pdo->prepare("INSERT INTO notifications (resident_id, notification_type, event_id, message, link) VALUES (?, ?, ?, ?, ?)");
+		$stmt->execute([$resident_id, 'Maintenance Bill', $id, $message, $notification_link]);
 
   		$_SESSION['success'] = 'New Maintenance Bill Data Added';
 
@@ -63,13 +55,13 @@ if (!isset($_SESSION['resident_id']) || $_SESSION['resident_role'] !== 'admin')
   	exit();
 }
 
-$sql = "SELECT id, house_number, street_name, block_number FROM house ORDER BY id DESC";
+$sql = "SELECT id, name , ssn FROM resident ORDER BY id DESC";
 
 $stmt = $pdo->prepare($sql);
 
 $stmt->execute();
 
-$flats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$residents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 include('header.php');
 
@@ -100,9 +92,14 @@ include('header.php');
 			</div>
 			<div class="card-body">
 				<form method="post">
-					<div class="mb-3">
-				    	<label for="house-id">House ID</label>
-				    	<input type="number" id="house-id" name="house_id" class="form-control" >
+                <div class="mb-3">
+				    	<label for="resident_id">Resident ID</label>
+				    	<select name="resident_id" class="form-control">
+				    		<option value="">Select Resident</option>
+				    		<?php foreach($residents as $resident): ?>
+				    		<option value="<?php echo $resident['id']; ?>"><?php echo $resident['name'] . ' - ' . $resident['ssn']; ?></option>
+				    		<?php endforeach; ?>
+				    	</select>
 				  	</div>
 				  	<div class="mb-3">
 				    	<label for="amount">Amount</label>
@@ -112,7 +109,7 @@ include('header.php');
 				    	<label for="month">Month</label>
 				    	<input type="month" id="month" name="month" class="form-control">
 				  	</div>
-				  	<button type="submit" name="add_maintenance" class="btn btn-primary">Add Bill</button>
+				  	<button type="submit" name="add_maintenance" class="btn btn-primary">Add Maintenance Bill</button>
 				</form>
 			</div>
 		</div>

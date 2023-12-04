@@ -8,7 +8,7 @@ if (!isset($_SESSION['resident_id']) || ($_SESSION['resident_role'] !== 'admin' 
   	exit();
 }
 
-if(isset($_POST['maintenance_payment']))
+if(isset($_POST['payment_payment']))
 {
 	// Validate the form data
   	$paid_amount = $_POST['paid_amount'];
@@ -17,22 +17,23 @@ if(isset($_POST['maintenance_payment']))
 
   	if (empty($paid_date)) 
   	{
-	    $errors[] = 'Please Select Maintenance Payment Date';
+	    $errors[] = 'Please Select Payment Payment Date';
   	}
   	if (empty($paid_amount)) 
   	{
-    	$errors[] = 'Please enter Maintenance Amount You Paid';
+    	$errors[] = 'Please enter Payment Amount You Paid';
   	} 
   	else if($paid_amount != $_POST['hidden_amount'])
   	{
   		$errors[] = 'Amount not match, please enter ' . $_POST['hidden_amount'] . '';
   	}
-  	// If the form data is valid, update the user's password
+  	// If the form data is valid, update the payment data
   	if (empty($errors)) 
-  	{    $id = $_GET['id'];
-  		// Insert user data into the database
-	    $stmt = $pdo->prepare("UPDATE maintenance SET paid_date = ?, paid_amount = ? WHERE id = ?");
+  	{    
+  		// Insert payment data into the database
+	    $stmt = $pdo->prepare("UPDATE payment SET paid_date = ?, paid_amount = ? WHERE id = ?");
 
+        
 	    $stmt->execute([$paid_date, $paid_amount, $id]);
 
 	    $admin_id = $pdo->query("SELECT id FROM resident WHERE role = 'admin'")->fetchColumn();
@@ -40,34 +41,42 @@ if(isset($_POST['maintenance_payment']))
 	    // insert notification data into notifications table
 		$message = "Bill Payment Done by Resident- ".$_POST['resident_id'].".";
 		
-		$notification_link = 'maintenance_payment.php?id='.$id.'&action=notification';
+		$notification_link = 'payment_payment.php?id='.$id.'&action=notification';
 		$stmt = $pdo->prepare("INSERT INTO notifications (resident_id, notification_type, event_id, message, link) VALUES (?, ?, ?, ?, ?)");
-		$stmt->execute([$admin_id, 'Maintenance Bill Payment', $id, $message, $notification_link]);
+		$stmt->execute([$admin_id, 'Payment Bill Payment', $id, $message, $notification_link]);
 
-  		$_SESSION['success'] = 'Maintenance Payment has been done';
+  		// Update booked_status in facility table
+  		$stmtFacility = $pdo->prepare("UPDATE facility SET booked_status = 'available' WHERE id IN (SELECT facility_id FROM payment WHERE id = ?)");
+  		$stmtFacility->execute([$id]);
 
-  		header('location:maintenance.php');
+  		// Update booked_status in service table
+  		$stmtService = $pdo->prepare("UPDATE service SET booked_status = 'available' WHERE id IN (SELECT service_id FROM payment WHERE id = ?)");
+  		$stmtService->execute([$id]);
+
+  		$_SESSION['success'] = 'Payment has been done';
+
+  		header('location:payment.php');
   		exit();
   	}
 }
 
 if(isset($_GET['id']))
 {
-	$stmt = $pdo->prepare("SELECT maintenance.id, maintenance.resident_id, maintenance.amount, maintenance.month, maintenance.paid_date, maintenance.paid_amount, maintenance.created_at FROM maintenance WHERE maintenance.id = ?");
+	$stmt = $pdo->prepare("SELECT payment.id, payment.resident_id, payment.amount, payment.month, payment.paid_date, payment.paid_amount, payment.created_at FROM payment WHERE payment.id = ?");
 
 	$stmt->execute([$_GET['id']]);
 
-	$maintenance = $stmt->fetch(PDO::FETCH_ASSOC);
+	$payment = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if(isset($_GET['action']) && $_GET['action'] == 'notification')
 	{
 		if($_SESSION['resident_role'] == 'admin')
 		{
-			$notification_type = 'Maintenance Bill Payment';
+			$notification_type = 'Payment Bill Payment';
 		}
 		else
 		{
-			$notification_type = 'Maintenance Bill';
+			$notification_type = 'Payment Bill';
 		}
 		$stmt = $pdo->prepare("UPDATE notifications SET read_status = 'read' WHERE resident_id = '".$_SESSION['resident_id']."' AND notification_type = '".$notification_type."' AND event_id = '".$_GET['id']."'");
 
@@ -83,8 +92,8 @@ include('header.php');
     <h1 class="mt-4">Bill Payment</h1>
     <ol class="breadcrumb mb-4">
     	<li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="maintenance.php">Maintenance Bills Management</a></li>
-        <li class="breadcrumb-item active">Maintenance Bill Payment</li>
+        <li class="breadcrumb-item"><a href="payment.php">Payment Bills Management</a></li>
+        <li class="breadcrumb-item active">Payment Bill Payment</li>
     </ol>
 	<div class="col-md-4">
 		<?php
@@ -100,35 +109,35 @@ include('header.php');
 		?>
 		<div class="card">
 			<div class="card-header">
-				<h5 class="card-title">Maintenance Bill Payment</h5>
+				<h5 class="card-title">Payment Bill Payment</h5>
 			</div>
 			<div class="card-body">
 				<form method="post">
 				  	<div class="mb-3">
 				  		<div class="row">
 				    		<div class="col-md-5"><b>Resident ID</b></div>
-				    		<div class="col-md-7"><?php echo (isset($maintenance['resident_id'])) ? $maintenance['resident_id'] : ''; ?></div>
+				    		<div class="col-md-7"><?php echo (isset($payment['resident_id'])) ? $payment['resident_id'] : ''; ?></div>
 				    	</div>
 				    	<div class="row">
-				    		<div class="col-md-5"><b>Maintenance Bill Amount</b></div>
-				    		<div class="col-md-7"><?php echo (isset($maintenance['amount'])) ? $maintenance['amount'] : ''; ?></div>
+				    		<div class="col-md-5"><b>Payment Bill Amount</b></div>
+				    		<div class="col-md-7"><?php echo (isset($payment['amount'])) ? $payment['amount'] : ''; ?></div>
 				    	</div>
 				    	<div class="row">
 				    		<div class="col-md-5"><b>Bill Month</b></div>
-				    		<div class="col-md-7"><?php echo (isset($maintenance['month'])) ? $maintenance['month'] : ''; ?></div>
+				    		<div class="col-md-7"><?php echo (isset($payment['month'])) ? $payment['month'] : ''; ?></div>
 				    	</div>
 				  	
 				  	<?php
-				  	if(isset($maintenance['paid_date']) && !is_null($maintenance['paid_date']))
+				  	if(isset($payment['paid_date']) && !is_null($payment['paid_date']))
 				  	{
 				  	?>
 				  		<div class="row">
 				    		<div class="col-md-5"><b>Payment Date</b></div>
-				    		<div class="col-md-7"><?php echo (isset($maintenance['paid_date'])) ? $maintenance['paid_date'] : ''; ?></div>
+				    		<div class="col-md-7"><?php echo (isset($payment['paid_date'])) ? $payment['paid_date'] : ''; ?></div>
 				    	</div>
 				    	<div class="row">
 				    		<div class="col-md-5"><b>Paid Bill Amount</b></div>
-				    		<div class="col-md-7"><?php echo (isset($maintenance['paid_amount'])) ? $maintenance['paid_amount'] : ''; ?></div>
+				    		<div class="col-md-7"><?php echo (isset($payment['paid_amount'])) ? $payment['paid_amount'] : ''; ?></div>
 				    	</div>
 				  	<?php 
 				  	}
@@ -146,10 +155,10 @@ include('header.php');
 				    	<label for="paid_amount">Paid Bill Amount</label>
 				    	<input type="number" id="paid_amount" name="paid_amount" class="form-control" step="0.01" value="">
 				  	</div>
-				  	<input type="hidden" name="id" value="<?php echo (isset($maintenance['id'])) ? $maintenance['id'] : ''; ?>" />
-				  	<input type="hidden" name="hidden_amount" value="<?php echo (isset($maintenance['amount'])) ? $maintenance['amount'] : ''; ?>" />
-				  	<input type="hidden" name="resident_id" value="<?php echo (isset($maintenance['resident_id'])) ? $maintenance['resident_id'] : ''; ?>" />
-				  	<button type="submit" name="maintenance_payment" class="btn btn-primary">maintenance Payment</button>
+				  	<input type="hidden" name="id" value="<?php echo (isset($payment['id'])) ? $payment['id'] : ''; ?>" />
+				  	<input type="hidden" name="hidden_amount" value="<?php echo (isset($payment['amount'])) ? $payment['amount'] : ''; ?>" />
+				  	<input type="hidden" name="resident_id" value="<?php echo (isset($payment['resident_id'])) ? $payment['resident_id'] : ''; ?>" />
+				  	<button type="submit" name="payment_payment" class="btn btn-primary">Payment</button>
 				  	<?php
 				  		}
 				  		else

@@ -20,7 +20,7 @@ $house_id = '';
 $sql = "SELECT COUNT(*) AS maintenanceFee FROM maintenance";
 if($_SESSION['resident_role'] == 'resident')
 {
-    // $stmt = $pdo->prepare('SELECT flat_id FROM allotments WHERE user_id = ?');
+    // $stmt = $pdo->prepare('SELECT id FROM resident WHERE resident_id = ?');
     // $stmt->execute([$_SESSION['user_id']]);
     // $flat_id = $stmt->fetch(PDO::FETCH_ASSOC)['flat_id'];
     // $sql .= " WHERE flat_id = '".$flat_id."'";
@@ -35,73 +35,73 @@ $total_allotments = $stmt->fetch(PDO::FETCH_ASSOC)['total_allotments'];
 
 // Get total visitors
 $sql = "SELECT COUNT(*) AS total_visitors FROM visitor";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " WHERE flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " WHERE house_id = '".$house_id."'";
+}
 $stmt = $pdo->query($sql);
 $total_visitors = $stmt->fetch(PDO::FETCH_ASSOC)['total_visitors'];
 
 // Get total unresolved complaints
 $sql = "SELECT COUNT(*) AS total_unresolved_complaints FROM complaints WHERE status = 'unresolved'";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$house_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND resident_id = '".$_SESSION['resident_id']."'";
+}
 $stmt = $pdo->query($sql);
 $total_unresolved_complaints = $stmt->fetch(PDO::FETCH_ASSOC)['total_unresolved_complaints'];
 
 // Get total in progress complaints
 $sql = "SELECT COUNT(*) AS total_in_progress_complaints FROM complaints WHERE status = 'in_progress'";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND resident_id = '".$_SESSION['resident_id']."'";
+}
 $stmt = $pdo->query($sql);
 $total_in_progress_complaints = $stmt->fetch(PDO::FETCH_ASSOC)['total_in_progress_complaints'];
 
 // Get total resolved complaints
 $sql = "SELECT COUNT(*) AS total_resolved_complaints FROM complaints WHERE status = 'resolved'";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND resident_id = '".$_SESSION['resident_id']."'";
+}
 $stmt = $pdo->query($sql);
 $total_resolved_complaints = $stmt->fetch(PDO::FETCH_ASSOC)['total_resolved_complaints'];
 
 // Get total complaints
 $sql = "SELECT COUNT(*) AS total_complaints FROM complaints";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " WHERE flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND resident_id = '".$_SESSION['resident_id']."'";
+}
 $stmt = $pdo->query($sql);
 $total_complaints = $stmt->fetch(PDO::FETCH_ASSOC)['total_complaints'];
 
 // Get total booked facilities
 $sql = "SELECT COUNT(*) AS total_booked_facilities FROM facility WHERE booked_status = 'booked'";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND id in (Select facility_id from payment where resident_id = '".$_SESSION['resident_id']."')";
+}
 $stmt = $pdo->query($sql);
 $total_booked_facilities = $stmt->fetch(PDO::FETCH_ASSOC)['total_booked_facilities'];
 
 // Get total booked services
 $sql = "SELECT COUNT(*) AS total_booked_services FROM service WHERE booked_status = 'booked'";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND id in (Select service_id from payment where resident_id = '".$_SESSION['resident_id']."')";
+}
 $stmt = $pdo->query($sql);
 $total_booked_services = $stmt->fetch(PDO::FETCH_ASSOC)['total_booked_services'];
 
 // Get total booked facilities
 $sql = "SELECT COUNT(*) AS total_payments FROM payment";
-// if($_SESSION['user_role'] == 'user')
-// {
-// 	$sql .= " AND flat_id = '".$flat_id."'";
-// }
+if($_SESSION['resident_role'] == 'user')
+{
+	$sql .= " AND resident_id = '".$_SESSION['resident_id']."'";
+}
 $stmt = $pdo->query($sql);
 $total_payments = $stmt->fetch(PDO::FETCH_ASSOC)['total_payments'];
 include('header.php');
