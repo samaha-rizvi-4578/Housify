@@ -106,7 +106,7 @@ if($start_date != '' && $end_date != '' && $report_type != '')
 		$offset = ($current_page - 1) * $records_per_page;
 
 		// Retrieve the records from the database
-		$stmt = $pdo->prepare('SELECT maintenance.id,maintenance.resident_id, maintenance.amount, maintenance.month, maintenance.paid_date, maintenance.paid_amoun FROM maintenance WHERE maintenace.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY maintenance.id DESC LIMIT '.$offset.', '.$records_per_page.'');
+		$stmt = $pdo->prepare('SELECT maintenance.id,maintenance.resident_id, maintenance.amount, maintenance.month, maintenance.paid_date, maintenance.paid_amount FROM maintenance WHERE maintenance.created_at BETWEEN "'.$start_date.'" AND "'.$end_date.'" ORDER BY maintenance.id DESC LIMIT '.$offset.', '.$records_per_page.'');
 		$stmt->execute();
 		$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

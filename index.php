@@ -96,12 +96,12 @@ if(isset($_POST['btn_login']))
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Society Management System</title>
+        <title>Housify-Housing Society Management System</title>
         <!-- Load Bootstrap 5 CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-        <link rel='stylesheet' href="style.css">
+        <link rel='stylesheet' href="styles.css">
     </head>
-    <body>
+    <body id="login">
         <div class="container" className='d-flex justify-content-center align-items-center'>
             <div class="mt-5">
                 <h1 class="text-center">Housify</h1>
@@ -148,49 +148,3 @@ if(isset($_POST['btn_login']))
         
     </body>
 </html>
-
-<script>
-
-// $(document).ready(function() {
-//   // Disable HTML5 validation
-//   /*$('#login-form').attr('novalidate', 'novalidate');
-
-//   // Validate form input on submit
-//   $('#login-form').on('submit', function(e) {
-//     // Prevent form submission
-//     e.preventDefault();
-
-//     // Remove any existing error messages
-//     $('#email').removeClass('is-invalid');
-//     $('#password').removeClass('is-invalid');
-//     $('.invalid-feedback').hide();
-
-//     // Get form input values
-//     var email = $('#email').val().trim();
-//     var password = $('#password').val().trim();
-
-//     // Validate email address format
-//     if (!isValidEmail(email)) {
-//       $('#email').addClass('is-invalid');
-//       $('#email').next('.invalid-feedback').show();
-//       return;
-//     }
-
-//     // Validate password field is not empty
-//     if (password === '') {
-//       $('#password').addClass('is-invalid');
-//       $('#password').next('.invalid-feedback').show();
-//       return;
-//     }
-
-//     // Submit form if input is valid
-//     this.submit();
-//   });
-// });
-
-// // Function to validate email address format
-// function isValidEmail(email) {
-//   var emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-//   return emailRegex.test(email);
-// }*/
-</script>
