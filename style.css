@@ -1,0 +1,186 @@
+body {
+    background-image: url('https://i.pinimg.com/originals/8c/c9/e2/8cc9e20a1bfa04d3041b21e9f2bba001.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-weight: bold; /* Increase font weight */
+}
+
+#login {
+    background-color: rgba(255, 255, 255, 0.8); /* Light background color with opacity */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.card {
+    font-size: medium;
+    background-color: rgba(255, 255, 255, 0.568); /* White background for cards with opacity */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #6f42c1; /* Purple button color */
+    border-color: #6f42c1; /* Purple button border color */
+    border-radius: 10px;
+    display: block;
+    margin: auto;
+    font-size: medium
+}
+
+.btn-primary:hover {
+    color: #563d7c;
+    background-color: #f8d7da; /* Darker purple on hover */
+    border: 1px solid #563d7c;
+}
+
+.card-header {
+    color: #6f42c1; /* Purple text for header */
+    font-size: large;
+    font-weight: 700;
+}
+
+
+.form-control{
+    border-radius: 10px;
+    width: 90%;
+    margin: auto;
+    
+}
+/* Hover effect for form fields */
+.form-control:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #563d7c; /* Purple border color on hover */
+}
+
+
+.alert-danger {
+  background-color: #f8d7da; /* Light red for error messages */
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+
+/* Additional styling for your specific file */
+.navbar-brand {
+    color: #6f42c1;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    display: block;
+    background-color: #563d7c;
+    color: #fff;
+    border: 1px solid #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #6f42c1;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.sb-sidenav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #563d7c;
+    color: #ffffff;
+}
+
+.sb-sidenav-menu {
+    display: block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.sb-sidenav-menu a.nav-link {
+    width: 100%;
+    color: #ffffff;
+    display: block;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #563d7c;
+}
+
+.sb-sidenav-menu a.nav-link:hover {
+    background-color: #6f42c1;
+}
+
+.sb-sidenav-footer {
+    background-color: #6f42c1;
+    color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    width: 250px;
+    padding: 1rem;
+}
+
+#layoutSidenav_content {
+    margin-left: 250px;
+    transition: margin-left 0.5s;
+}
+
+main {
+    padding: 10px; /* Add padding for better content separation */
+}
+.container-fluid {
+    margin-top: 10px;
+}
+
+.breadcrumb {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+}
+
+.table-responsive {
+    width: 100%;
+}
+
+/* Additional styling for the DataTable */
+.table-responsive th,
+.table-responsive td {
+    padding: 0.5rem;
+    overflow: hidden;
+    white-space: nowrap; /* Prevent line breaks */
+}
+.table-responsive thead{
+    background-color: #6f42c1;
+    color: #ffffff;
+
+}
+
+/* Adjust DataTable search input */
+.table-responsive input {
+    border: 1px solid #6f42c1;
+    border-radius: 5px;
+}
+
+/* Additional styling for the Add button */
+.btn-success {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    font-weight: bold;
+}
+
+.btn-success:hover {
+    background-color: #563d7c;
+    border-color: #563d7c;
+}
+
+/* Additional styling for the DataTable pagination */
+.paginate_button {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    font-weight: bold;
+}
+
+.paginate_button:hover {
+    background-color: #563d7c;
+    border-color: #563d7c;
+}
+

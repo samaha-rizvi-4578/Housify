@@ -98,8 +98,9 @@ if(isset($_POST['btn_login']))
         <meta charset="UTF-8">
         <title>Housify-Housing Society Management System</title>
         <!-- Load Bootstrap 5 CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-        <link rel='stylesheet' href="styles.css">
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/lux/bootstrap.min.css">
+        <link rel='stylesheet' href="style.css">
     </head>
     <body id="login">
         <div class="container" className='d-flex justify-content-center align-items-center'>

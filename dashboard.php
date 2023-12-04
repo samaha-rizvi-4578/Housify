@@ -120,7 +120,7 @@ include('header.php');
                     	if($_SESSION['resident_role'] == 'admin')
                     	{
                     	?>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="col-xl-4 col-md-6">
                             <div class="card">
 								<div class="card-header">
 									<h5>Total houses</h5>
@@ -130,17 +130,17 @@ include('header.php');
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="col-xl-4 col-md-6">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Maintenance Bills</h5>
+									<h5>Maintenance Bills</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $maintenanceFee; ?></p>
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="col-xl-4 col-md-6">
                         	<div class="card">
 								<div class="card-header">
 									<h5>Total Allotment</h5>
@@ -150,7 +150,7 @@ include('header.php');
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                             <div class="card">
                                 <div class="card-header">
                                     <h5>Total Visitors</h5>
@@ -160,57 +160,57 @@ include('header.php');
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
+                        <div class="col-xl-4 col-md-6 mt-3">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5>Total In-process Complaints</h5>
+                                    <h5>In-process Complaints</h5>
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text"><?php echo $total_in_progress_complaints; ?></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Unresolved Complaints</h5>
+									<h5>Unresolved Complaints</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_unresolved_complaints; ?></p>
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Resolved Complaints</h5>
+									<h5>Resolved Complaints</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_resolved_complaints; ?></p>
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Booked Facilities</h5>
+									<h5>Booked Facilities</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_booked_facilities; ?></p>
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Booked Services</h5>
+									<h5>Booked Services</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_booked_services; ?></p>
 								</div>
 							</div>
                         </div>
-                        <div class="col-xl-3 col-md-6 mt-3">
+                        <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
 									<h5>Total Payments</h5>
@@ -225,10 +225,10 @@ include('header.php');
                     	else
                     	{
                     	?>
-                    	<div class="col-xl-4 col-md-6">
+                    	<div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total In-process Complaints</h5>
+									<h5>In-process Complaints</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_in_progress_complaints; ?></p>
@@ -238,7 +238,7 @@ include('header.php');
                         <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Unresolved Complaints</h5>
+									<h5>Unresolved Complaints</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_unresolved_complaints; ?></p>
@@ -248,7 +248,7 @@ include('header.php');
                         <div class="col-xl-4 col-md-6 mt-3">
                         	<div class="card">
 								<div class="card-header">
-									<h5>Total Resolved Complaints</h5>
+									<h5>Resolved Complaints</h5>
 								</div>
 								<div class="card-body">
 									<p class="card-text"><?php echo $total_resolved_complaints; ?></p>
@@ -293,6 +293,8 @@ include('header.php');
                         ?>
                     </div>
                 </div>
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
 <?php
 	include('footer.php');
 ?>
