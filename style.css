@@ -41,7 +41,6 @@ body {
 
 
 .form-control{
-    border-radius: 10px;
     width: 90%;
     margin: auto;
     
@@ -58,13 +57,16 @@ body {
   border-color: #f5c6cb;
   color: #721c24;
 }
-
+.credits {
+    font-size: 23px;
+    font-weight: bold;
+    color: #fff; /* Adjust the color to your preference */
+    text-align: center;
+    margin-top: 20px;
+}
 
 /* Additional styling for your specific file */
-.navbar-brand {
-    color: #6f42c1;
-    font-weight: bold;
-}
+
 
 .navbar-nav .nav-link {
     display: block;
@@ -91,7 +93,16 @@ body {
     background-color: #563d7c;
     color: #ffffff;
 }
-
+.navbar-brand {
+    color: #ffffff; /* Text color */
+    font-weight: bold;
+    font-size: large;
+    padding: 0; /* Add padding to the navbar-brand */
+}
+.navbar-brand img {
+    width: 50px; /* Set the width of the image */
+    height: auto; /* Maintain aspect ratio */
+}
 .sb-sidenav-menu {
     display: block;
     padding-top: 1rem;

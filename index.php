@@ -96,9 +96,9 @@ if(isset($_POST['btn_login']))
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Housify-Housing Society Management System</title>
+        <title>Housify</title>
         <!-- Load Bootstrap 5 CSS -->
-    
+        <link rel="icon" type="image/png" href="logo.png">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/lux/bootstrap.min.css">
         <link rel='stylesheet' href="style.css">
     </head>
@@ -142,7 +142,11 @@ if(isset($_POST['btn_login']))
                     </div>
                 </div>
             </div>
+            <div class="credits">
+                Designed by <a href="https://github.com/samaha-rizvi-4578/Housify">Rizvi</a>
         </div>
+        </div>
+        
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- Load Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
