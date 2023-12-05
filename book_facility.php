@@ -48,7 +48,7 @@ if (isset($_POST['book_facility'])) {
 
     $_SESSION['success'] = 'Facility booked successfully';
 
-    header('Location: book_facility.php'); // Redirect to the same page after booking
+    header('Location: facility.php'); // Redirect to the main page after booking
     exit();
 }
 }

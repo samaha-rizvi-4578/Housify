@@ -36,7 +36,7 @@ if (isset($_POST['book_service'])) {
 
     $_SESSION['success'] = 'Service booked successfully';
 
-    header('Location: book_service.php'); // Redirect to the same page after booking
+    header('Location: service.php'); // Redirect to the same page after booking
     exit();
 }
 }
