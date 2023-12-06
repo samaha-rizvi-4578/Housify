@@ -7,7 +7,14 @@
 
 
 ### Work Division
-Database: 21k3377
-Frontend: 21k4578
-Backend: 21k4578
+#### - Samaha:
+- Backend development.
+- Establishing the connection between Frontend and Backend.
+- Designing the relational schema.
+#### - Maria:
+- Frontend development.
+- Creation of the database.
+#### - Laiba:
+- Creating the ERD (Entity-Relationship Diagram).
+
 

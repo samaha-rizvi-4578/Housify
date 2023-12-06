@@ -143,7 +143,7 @@ if(isset($_POST['btn_login']))
                 </div>
             </div>
             <div class="credits">
-                All Rights Reserved by Developers<a href="https://github.com/samaha-rizvi-4578/Housify"> Maria and Samaha</a>
+                All Rights Reserved by Developers <a href="https://github.com/samaha-rizvi-4578/Housify" style="color: black; font-size: 12px; text-decoration: underline black 1px;"><b>Maria and Samaha</b></a>
         </div>
         </div>
         
