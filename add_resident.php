@@ -15,10 +15,20 @@ if(isset($_POST['add_resident']))
   	{
 	    $errors[] = 'Please enter your name';
   	}
-  	if (empty($ssn)) 
-  	{
-    	$errors[] = 'Please enter your social security number (SSN)';
-  	} 
+	  if (empty($ssn)) {
+        $errors[] = 'SSN is required';
+    } elseif (strlen($ssn) != 9) {
+        $errors[] = 'SSN must be exactly 9 digits';
+    } else {
+        // Check if SSN is already registered
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM resident WHERE ssn = ?");
+        $stmt->execute([$ssn]);
+        $count = $stmt->fetchColumn();
+
+        if ($count > 0) {
+            $errors[] = 'SSN is already registered';
+        }
+    }
   	if (empty($house_id)) 
   	{
     	$errors[] = 'Please enter your house id';

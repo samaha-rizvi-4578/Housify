@@ -27,7 +27,9 @@ if(isset($_POST['edit_visitor']))
     }
 
     if (empty($ssn)) {
-        $errors[] = 'ssn is required';
+        $errors[] = 'SSN is required';
+    } elseif (strlen($ssn) != 9) {
+        $errors[] = 'SSN must be exactly 9 digits';
     }
 
     if (empty($reason)) {

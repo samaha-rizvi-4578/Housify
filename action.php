@@ -341,7 +341,6 @@ if (isset($_POST['action'])) {
 		// Convert the response to JSON and output it
 		echo json_encode($response);
 	}
-
     if ($_POST['action'] == 'fetch_visitor') {
         $columns = array(
             'visitor.id',
@@ -787,7 +786,7 @@ if (isset($_POST['action'])) {
             $payment_button = '<a href="payment_payment.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">View</a>&nbsp;';
     
             if ($_SESSION['resident_role'] == 'admin') {
-                $payment_button .= '<a href="edit_payment.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary">Edit</a>&nbsp;<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="' . $row['id'] . '">Delete</button>';
+                $payment_button .= '<button type="button" class="btn btn-sm btn-danger delete_btn" data-id="' . $row['id'] . '">Delete</button>';
             }
     
             $sub_array[] = $payment_button;

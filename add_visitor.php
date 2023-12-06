@@ -26,7 +26,9 @@ if(isset($_POST['add_visitor']))
     }
 
     if (empty($ssn)) {
-        $errors[] = 'ssn is required';
+        $errors[] = 'SSN is required';
+    } elseif (strlen($ssn) != 9) {
+        $errors[] = 'SSN must be exactly 9 digits';
     }
 
     if (empty($reason)) {
@@ -109,8 +111,8 @@ include('header.php');
 				    	<textarea id="reason" name="reason" class="form-control" placeholder="Enter reason to visit"></textarea>
 				  	</div>
 				  	<div class="mb-3">
-				    	<label for="in_datetime">In Date/Time</label>
-				    	<input type="datetime-local" id="in_datetime" name="in_datetime" class="form-control" placeholder="Enter time">
+                      <label for="in_datetime">In Date/Time</label>
+                        <input type="datetime-local" id="in_datetime" name="in_datetime" class="form-control" placeholder="Enter time" value="<?= date('Y-m-d\TH:i'); ?>">
 				  	</div>
 				  	<button type="submit" name="add_visitor" class="btn btn-primary">Add Visitor</button>
 				</form>

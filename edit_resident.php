@@ -15,17 +15,18 @@ if (isset($_POST['edit_resident'])) {
     $password = $_POST['password'];
     $role = $_POST['role'];
     $allowed_roles = ['admin', 'user'];
-    echo $ssn;
-    echo $name;
-    echo $house_id;
-    echo $password;
-    echo $role;
+    // echo $ssn;
+    // echo $name;
+    // echo $house_id;
+    // echo $password;
+    // echo $role;
     if (empty($name)) {
         $errors[] = 'Please enter your name';
     }
     if (empty($ssn)) {
-        
-        $errors[] = 'Please enter your social security number (SSN)';
+        $errors[] = 'SSN is required';
+    } elseif (strlen($ssn) != 9) {
+        $errors[] = 'SSN must be exactly 9 digits';
     }
     if (empty($house_id)) {
         $errors[] = 'Please enter your house id';

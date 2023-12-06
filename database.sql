@@ -160,7 +160,7 @@ CREATE TABLE `payment` (
 
 
 --
--- Constraints for table `allotments`
+-- Constraints for table `resident`
 --
 ALTER TABLE `resident`
   ADD CONSTRAINT `resident_fk` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE CASCADE;
@@ -172,7 +172,7 @@ ALTER TABLE `visitor`
   ADD CONSTRAINT `visitor_fk` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `complaints`
+-- Constraints for table `maintenance`
 --
 ALTER TABLE `maintenance`
   ADD CONSTRAINT `maintenace_fk` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`) ON DELETE CASCADE;
@@ -184,7 +184,7 @@ ALTER TABLE `notifications`
   ADD CONSTRAINT `notification_fk` FOREIGN KEY (`resident_id`) REFERENCES `resident` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `visitors`
+-- Constraints for table `payment`
 --
 ALTER TABLE `payment`
   ADD CONSTRAINT `payment_fk1` FOREIGN KEY (`resident_id`) REFERENCES `residet` (`id`) ON DELETE CASCADE,

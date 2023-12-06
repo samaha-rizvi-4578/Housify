@@ -42,16 +42,6 @@ include('header.php');
                 <div class="col col-6">
                     <h5 class="card-title">Payment Management</h5>
                 </div>
-                <div class="col col-6">
-                    <?php
-                    if($_SESSION['resident_role'] == 'admin')
-                    {
-                    ?>
-                    <div class="float-end"><a href="add_payment.php" class="btn btn-success btn-sm">Add</a></div>
-                    <?php
-                    }
-                    ?>
-                </div>
             </div>
         </div>
         <div class="card-body">
@@ -60,9 +50,9 @@ include('header.php');
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Resident ID</th>
-                            <th>Facility ID</th>
-                            <th>Service ID</th>
+                            <th>RID</th>
+                            <th>FID</th>
+                            <th>SID</th>
                             <th>Amount</th>
                             <th>Month</th>
                             <th>Paid Date</th>

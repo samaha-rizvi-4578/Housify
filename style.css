@@ -59,8 +59,7 @@ body {
   color: #721c24;
 }
 .credits {
-    font-size: 23px;
-    font-weight: bold;
+    font-size: 10px;
     color: #fff; /* Adjust the color to your preference */
     text-align: center;
     margin-top: 20px;
@@ -149,14 +148,15 @@ main {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
 }
-
+/* 
 .table-responsive {
     width: 100%;
-}
+} */
 
 /* Additional styling for the DataTable */
 .table-responsive th,
 .table-responsive td {
+    max-width: fit-content;
     padding: 0.5rem;
     overflow: hidden;
     white-space: nowrap; /* Prevent line breaks */
@@ -196,4 +196,3 @@ main {
     background-color: #563d7c;
     border-color: #563d7c;
 }
-
