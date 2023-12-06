@@ -1,8 +1,6 @@
 # housify
 ![Alt text](image-3.png)
 
-## Admin
-![Alt text](image.png)
 ### Work Division
 #### - Samaha:
 - Backend development.
