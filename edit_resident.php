@@ -10,7 +10,7 @@ if (!isset($_SESSION['resident_id']) || $_SESSION['resident_role'] !== 'admin') 
 if (isset($_POST['edit_resident'])) {
     // Validate the form data
     $name = $_POST['name'];
-    $ssn = $_POST['ssn'];
+   // $ssn = $_POST['ssn'];
     $house_id = $_POST['house_id'];
     $password = $_POST['password'];
     $role = $_POST['role'];
@@ -23,11 +23,11 @@ if (isset($_POST['edit_resident'])) {
     if (empty($name)) {
         $errors[] = 'Please enter your name';
     }
-    if (empty($ssn)) {
-        $errors[] = 'SSN is required';
-    } elseif (strlen($ssn) != 9) {
-        $errors[] = 'SSN must be exactly 9 digits';
-    }
+    // if (empty($ssn)) {
+    //     $errors[] = 'SSN is required';
+    // } elseif (strlen($ssn) != 9) {
+    //     $errors[] = 'SSN must be exactly 9 digits';
+    // }
     if (empty($house_id)) {
         $errors[] = 'Please enter your house id';
     }
@@ -48,11 +48,11 @@ if (isset($_POST['edit_resident'])) {
     // If the form data is valid, update the user's password
     if (empty($errors)) {
         $id = $_GET['id'];
-            $sql = "UPDATE resident SET name = ?, ssn = ?, house_id = ?,password = ?, role = ? WHERE id = ?";
+            $sql = "UPDATE resident SET name = ?,  house_id = ?,password = ?, role = ? WHERE id = ?";
 
             echo $sql;
 
-            $pdo->prepare($sql)->execute([$name, $ssn, $house_id, $password, $role, $id]);
+            $pdo->prepare($sql)->execute([$name, $house_id, $password, $role, $id]);
 
 
         $_SESSION['success'] = 'Resident Data has been edited';
@@ -103,10 +103,10 @@ include('header.php');
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?php echo isset($resident['name']) ? $resident['name'] : ''; ?>">
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="ssn">SSN</label>
                         <input type="text" class="form-control" id="ssn" name="ssn" placeholder="Enter SSN" value="<?php echo isset($resident['ssn']) ? $resident['ssn'] : ''; ?>">
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label for="house-id">House ID</label>
                         <input type="number" class="form-control" id="house-id" name="house_id" placeholder="Enter House ID" value="<?php echo isset($resident['house_id']) ? $resident['house_id'] : ''; ?>">

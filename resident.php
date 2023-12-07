@@ -8,12 +8,29 @@ if (!isset($_SESSION['resident_id']) || $_SESSION['resident_role'] !== 'admin')
   	exit();
 }
 
-if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete')
-{
-	$stmt = $pdo->prepare("DELETE FROM resident WHERE id = ?");
-  	$stmt->execute([$_GET['id']]);
-  	$_SESSION['success'] = 'Resident Data has been removed';
-  	header('location:resident.php');
+if (isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete') {
+    try {
+        $pdo->beginTransaction();
+
+        // Update booked_status in facility and service tables
+        $stmtUpdateFacility = $pdo->prepare("UPDATE facility SET booked_status = 'available' WHERE id IN (SELECT facility_id FROM payment WHERE id = ?)");
+        $stmtUpdateFacility->execute([$_GET['id']]);
+
+        $stmtUpdateService = $pdo->prepare("UPDATE service SET booked_status = 'available' WHERE id IN (SELECT service_id FROM payment WHERE id = ?)");
+        $stmtUpdateService->execute([$_GET['id']]);
+
+        // Delete resident
+        $stmtDeleteResident = $pdo->prepare("DELETE FROM resident WHERE id = ?");
+        $stmtDeleteResident->execute([$_GET['id']]);
+
+        $pdo->commit();
+
+        $_SESSION['success'] = 'Resident Data has been removed';
+        header('location:resident.php');
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "Error: " . $e->getMessage();
+    }
 }
 
 include('header.php');

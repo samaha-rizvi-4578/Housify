@@ -12,7 +12,7 @@ if(isset($_POST['edit_visitor']))
 {
 	$house_id = trim($_POST['house_id']);
     $name = trim($_POST['name']);
-    $ssn = trim($_POST['ssn']);
+   // $ssn = trim($_POST['ssn']);
     $reason = trim($_POST['reason']);
     $in_datetime = trim($_POST['in_datetime']);
     $id = $_POST['id'];
@@ -26,11 +26,11 @@ if(isset($_POST['edit_visitor']))
         $errors[] = 'Name is required';
     }
 
-    if (empty($ssn)) {
-        $errors[] = 'SSN is required';
-    } elseif (strlen($ssn) != 9) {
-        $errors[] = 'SSN must be exactly 9 digits';
-    }
+    // if (empty($ssn)) {
+    //     $errors[] = 'SSN is required';
+    // } elseif (strlen($ssn) != 9) {
+    //     $errors[] = 'SSN must be exactly 9 digits';
+    // }
 
     if (empty($reason)) {
         $errors[] = 'Reason is required';
@@ -42,8 +42,8 @@ if(isset($_POST['edit_visitor']))
 
     // Insert visitor data if there are no validation errors
     if (empty($errors)) {
-        $stmt = $pdo->prepare('UPDATE visitor SET house_id = ?, name = ?, ssn = ?, reason = ?, in_datetime = ? WHERE id = ?');
-        $stmt->execute([$house_id, $name, $ssn, $reason, $in_datetime, $id]);
+        $stmt = $pdo->prepare('UPDATE visitor SET house_id = ?, name = ?,  reason = ?, in_datetime = ? WHERE id = ?');
+        $stmt->execute([$house_id, $name,  $reason, $in_datetime, $id]);
 
         $_SESSION['success'] = 'Visitor Data has been Edited';
 
@@ -111,10 +111,10 @@ include('header.php');
 				    	<label for="name">Name</label>
 				    	<input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?php echo (isset($visitor['name'])) ? $visitor['name'] : ''; ?>">
 				  	</div>
-				  	<div class="mb-3">
+				  	<!-- <div class="mb-3">
 				    	<label for="ssn">SSN</label>
 				    	<input type="text" class="form-control" id="ssn" name="ssn" placeholder="Enter ssn"  value="<?php echo (isset($visitor['ssn'])) ? $visitor['ssn'] : ''; ?>">
-				  	</div>
+				  	</div> -->
 
 				  	<div class="mb-3">
 				    	<label for="reason">Reason for Visit</label>

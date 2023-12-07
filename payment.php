@@ -10,6 +10,13 @@ if (!isset($_SESSION['resident_id']) && ($_SESSION['resident_role'] !== 'admin')
 
 if(isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete' && $_SESSION['resident_role'] == 'admin')
 {
+     // Update booked_status in facility table
+     $stmtFacility = $pdo->prepare("UPDATE facility SET booked_status = 'available' WHERE id IN (SELECT facility_id FROM payment WHERE id = ?)");
+     $stmtFacility->execute([$_GET['id']]);
+ 
+     // Update booked_status in service table
+     $stmtService = $pdo->prepare("UPDATE service SET booked_status = 'available' WHERE id IN (SELECT service_id FROM payment WHERE id = ?)");
+     $stmtService->execute([$_GET['id']]);
     $stmt = $pdo->prepare("DELETE FROM payment WHERE id = ?");
     $stmt->execute([$_GET['id']]);
     $_SESSION['success'] = 'Payment Data has been removed';

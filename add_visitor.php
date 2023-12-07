@@ -24,11 +24,19 @@ if(isset($_POST['add_visitor']))
     if (empty($name)) {
         $errors[] = 'Name is required';
     }
-
     if (empty($ssn)) {
         $errors[] = 'SSN is required';
     } elseif (strlen($ssn) != 9) {
         $errors[] = 'SSN must be exactly 9 digits';
+    } else {
+        // Check if SSN is already registered
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM resident WHERE ssn = ?");
+        $stmt->execute([$ssn]);
+        $count = $stmt->fetchColumn();
+
+        if ($count > 0) {
+            $errors[] = 'SSN is already registered';
+        }
     }
 
     if (empty($reason)) {
